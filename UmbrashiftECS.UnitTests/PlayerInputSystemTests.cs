@@ -115,4 +115,30 @@ public class PlayerInputSystemTests
         Assert.Equal((uint)15, player.Get<InputBuffer>().LastDashPressedFrame);
         Assert.False(player.Get<InputBuffer>().LastDashPressHandled);
     }
+
+    [Fact]
+    public void ReleasingAnActionCreatesOneBufferedRelease()
+    {
+        using var world = World.Create();
+        var player = world.Create(
+            new InputBinding { InputBindingSlot = 2 },
+            new InputState(),
+            new InputBuffer());
+        var system = new PlayerInputSystem(world);
+
+        system.SetInput(new PlayerInputStateDTO
+        {
+            InputBindingSlot = 2,
+            IsAttackPressed = true
+        }, currentFrame: 12);
+        system.SetInput(new PlayerInputStateDTO { InputBindingSlot = 2 }, currentFrame: 13);
+
+        var inputBuffer = player.Get<InputBuffer>();
+        Assert.Equal((uint)13, inputBuffer.LastAttackReleasedFrame);
+        Assert.False(inputBuffer.LastAttackReleaseHandled);
+
+        system.SetInput(new PlayerInputStateDTO { InputBindingSlot = 2 }, currentFrame: 14);
+
+        Assert.Equal((uint)13, inputBuffer.LastAttackReleasedFrame);
+    }
 }

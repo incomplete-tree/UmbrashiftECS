@@ -49,11 +49,21 @@ public partial class PlayerInputSystem : BaseSystem<World, uint>
             inputBuffer.LastDashPressedFrame = currentFrame;
             inputBuffer.LastDashPressHandled = false;
         }
+        else if (!input.IsDashPressed && inputState.IsDashPressed)
+        {
+            inputBuffer.LastDashReleasedFrame = currentFrame;
+            inputBuffer.LastDashReleaseHandled = false;
+        }
 
         if (input.IsJumpPressed && !inputState.IsJumpPressed)
         {
             inputBuffer.LastJumpPressedFrame = currentFrame;
             inputBuffer.LastJumpPressHandled = false;
+        }
+        else if (!input.IsJumpPressed && inputState.IsJumpPressed)
+        {
+            inputBuffer.LastJumpReleasedFrame = currentFrame;
+            inputBuffer.LastJumpReleaseHandled = false;
         }
 
         if (input.IsAttackPressed && !inputState.IsAttackPressed)
@@ -61,11 +71,21 @@ public partial class PlayerInputSystem : BaseSystem<World, uint>
             inputBuffer.LastAttackPressedFrame = currentFrame;
             inputBuffer.LastAttackPressHandled = false;
         }
+        else if (!input.IsAttackPressed && inputState.IsAttackPressed)
+        {
+            inputBuffer.LastAttackReleasedFrame = currentFrame;
+            inputBuffer.LastAttackReleaseHandled = false;
+        }
 
         if (input.IsTogglePressed && !inputState.IsTogglePressed)
         {
             inputBuffer.LastTogglePressedFrame = currentFrame;
             inputBuffer.LastTogglePressHandled = false;
+        }
+        else if (!input.IsTogglePressed && inputState.IsTogglePressed)
+        {
+            inputBuffer.LastToggleReleasedFrame = currentFrame;
+            inputBuffer.LastToggleReleaseHandled = false;
         }
     }
     
