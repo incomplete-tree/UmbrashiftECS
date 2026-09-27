@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Arch" Version="2.1.0-beta" />
+        <PackageReference Include="Arch.EventBus" Version="1.0.2" />
+        <PackageReference Include="Arch.System" Version="1.1.0" />
+        <PackageReference Include="Arch.System.SourceGenerator" Version="2.1.0" />
+        <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+    </ItemGroup>
+</Project>
