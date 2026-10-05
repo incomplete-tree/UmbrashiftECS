@@ -17,6 +17,9 @@ public partial class GroundedCheckSystem(World world) : BaseSystem<World, uint>(
         {
             groundedState.IsGrounded = true;
             groundedState.LastGroundedTime = currentFrame;
+            return;
         }
+
+        groundedState.IsGrounded = false;
     }
 }

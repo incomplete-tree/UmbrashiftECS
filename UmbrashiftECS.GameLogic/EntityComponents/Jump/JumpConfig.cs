@@ -8,4 +8,4 @@ public record struct JumpConfig
     public int JumpHeight;
     public bool AllowAirJump;
     public uint CoyoteTimeFrames;
-}
+ }

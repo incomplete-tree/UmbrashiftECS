@@ -14,20 +14,21 @@ namespace UmbrashiftECS.GameLogic.Systems;
 public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>(world)
 {
     [Query]
-    public void CheckActorCollision(in Entity entity, in ActorBody _, ref MovementDelta movementDelta)
+    public void CheckActorCollision(in Entity entity, in ActorBody _, ref MovementDelta movementDelta, ref Velocity velocity)
     {
         var position = entity.Get<Position>();
         var remainder = entity.TryGet<FractionalPositionRemainder>(out var value)
             ? value
             : default;
 
-        var collided = CheckX(entity, position.X, remainder.X, ref movementDelta.X);
-        collided |= CheckY(entity, position.Y, remainder.Y, ref movementDelta.Y);
+        var collidedX = CheckX(entity, position.X, remainder.X, ref movementDelta.X);
+        var collidedY = CheckY(entity, position.Y, remainder.Y, ref movementDelta.Y);
 
-        if (collided)
+        if (collidedY || collidedX)
         {
-            var hitWallEvent = new ActorHitWallEvent(entity);
-            EventBus.Send(in hitWallEvent);
+            var hitWallEvent = new ActorHitWallEvent(entity, collidedX, collidedY);
+            velocity = new Velocity();
+            // EventBus.Send(in hitWallEvent);
         }
     }
 
@@ -100,4 +101,4 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
     }
 }
 
-public record struct ActorHitWallEvent(Entity Actor);
+public record struct ActorHitWallEvent(Entity Actor, bool OnXAxis, bool OnYAxis);

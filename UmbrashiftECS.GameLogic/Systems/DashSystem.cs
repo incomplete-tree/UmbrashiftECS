@@ -17,29 +17,8 @@ public partial class DashSystem(World world) : BaseSystem<World, uint>(world)
         if (dashState.TimeRemaining <= 0)
             dashState.IsDashing = false;
     }
-    
-    [Query]
-    public static void AddVelocityOfCurrentlyDashingEntities(in Entity entity,
-        ref MovementDelta movementDelta,
-        in DashState dashState,
-        in DashConfig dashConfig)
-    {
-        if (!dashState.IsDashing) return;
-        
-        if (movementDelta.X < dashState.DirectionX * dashConfig.Speed)
-            movementDelta.X = dashState.DirectionX * dashConfig.Speed;
-        
-        if (movementDelta.Y < dashState.DirectionY * dashConfig.Speed)
-            movementDelta.Y = dashState.DirectionY * dashConfig.Speed;
-    }
 
     [Query]
-    public static void RefillDashes(in Entity entity, ref DashState dashState, in DashConfig config, in GroundedState groundedState)
-    {
-        if (groundedState.IsGrounded && (config.Duration - dashState.TimeRemaining) > config.FramesTillRefill)
-            dashState.AmountRemaining = config.Amount;
-    }
-
     public static void StartDashes(in Entity entity,
         [Data] uint currentFrame,
         ref DashState dashState,
@@ -49,7 +28,7 @@ public partial class DashSystem(World world) : BaseSystem<World, uint>(world)
         in FacingDirection facingDirection)
     {
         if (dashState.IsDashing) return;
-        
+
         if (dashState.AmountRemaining > 0 && inputBuffer.ConsumeActionIfPressed(currentFrame, inputBuffer.LastDashPressedFrame, ref inputBuffer.LastDashPressHandled))
         {
             dashState.AmountRemaining--;
@@ -74,7 +53,33 @@ public partial class DashSystem(World world) : BaseSystem<World, uint>(world)
             dashState.DirectionY = y;
 
             dashState.TimeRemaining = dashConfig.Duration;
-            
+
         }
+    }
+
+    [Query]
+    public static void AddVelocityOfCurrentlyDashingEntities(in Entity entity,
+        ref MovementDelta movementDelta,
+        in DashState dashState,
+        in DashConfig dashConfig)
+    {
+        if (!dashState.IsDashing) return;
+
+        var dashVelocityX = dashState.DirectionX * dashConfig.Speed;
+        if (dashState.DirectionX > 0 && movementDelta.X < dashVelocityX ||
+            dashState.DirectionX < 0 && movementDelta.X > dashVelocityX)
+            movementDelta.X = dashVelocityX;
+
+        var dashVelocityY = dashState.DirectionY * dashConfig.Speed;
+        if (dashState.DirectionY > 0 && movementDelta.Y < dashVelocityY ||
+            dashState.DirectionY < 0 && movementDelta.Y > dashVelocityY)
+            movementDelta.Y = dashVelocityY;
+    }
+
+    [Query]
+    public static void RefillDashes(in Entity entity, ref DashState dashState, in DashConfig config, in GroundedState groundedState)
+    {
+        if (groundedState.IsGrounded && (config.Duration - dashState.TimeRemaining) > config.FramesTillRefill)
+            dashState.AmountRemaining = config.Amount;
     }
 }

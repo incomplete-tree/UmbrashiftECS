@@ -31,7 +31,7 @@ public partial class JumpSystem(World world) : BaseSystem<World, uint>(world)
 
         if (!canJump) return;
 
-        if (!inputBuffer.ConsumeActionIfPressed(currentFrame, inputBuffer.LastJumpReleasedFrame,
+        if (!inputBuffer.ConsumeActionIfPressed(currentFrame, inputBuffer.LastJumpPressedFrame,
             ref inputBuffer.LastJumpPressHandled)) return;
 
         velocity.Y += jumpConfig.InitialJumpSpeed;

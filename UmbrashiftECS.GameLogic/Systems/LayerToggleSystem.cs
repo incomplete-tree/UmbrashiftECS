@@ -18,13 +18,14 @@ public partial class LayerToggleSystem(World world) : BaseSystem<World, uint>(wo
         ref Position position)
     {
         if (!inputBuffer.IsBuffered(currentFrame, inputBuffer.LastToggleReleasedFrame,
-                inputBuffer.LastTogglePressHandled)) return;
+                inputBuffer.LastToggleReleaseHandled)) return;
         
         var originalLayer = layer;
         layer = originalLayer == Layer.GameplayLayer0 ? Layer.GameplayLayer1 : Layer.GameplayLayer0;
         
         if (!CollisionService.IsCollidingWith<SolidBody>(entity))
         {
+            inputBuffer.LastToggleReleaseHandled = true;
             return;
         }
 
@@ -41,7 +42,8 @@ public partial class LayerToggleSystem(World world) : BaseSystem<World, uint>(wo
             {
                 if (!CollisionService.IsCollidingWith<SolidBody>(entity, offsetX, offsetY))
                 {
-                    inputBuffer.LastTogglePressHandled = true;
+                    inputBuffer.LastToggleReleaseHandled = true;
+                    position = new Position(position.X + offsetX, position.Y + offsetY);
                     return;
                 }
             }

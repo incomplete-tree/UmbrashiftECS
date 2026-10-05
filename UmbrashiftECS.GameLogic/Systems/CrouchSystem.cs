@@ -44,11 +44,14 @@ public partial class CrouchSystem(World world) : BaseSystem<World, uint>(world)
     }
 
     [Query]
-    public void ForceCrouchedInSmallSpaces(in Entity entity, ref CrouchState crouchState)
+    public void ForceCrouchedInSmallSpaces(
+        in Entity entity,
+        ref CrouchState crouchState,
+        in CrouchConfig crouchConfig)
     {
         if (crouchState.IsCrouched) return;
 
-        if (CollisionService.IsCollidingWith<SolidBody>(entity))
+        if (CollisionService.IsCollidingWith<SolidBody>(entity, crouchConfig.StandingCollider))
         {
             crouchState.IsCrouched = true;
         }
@@ -61,7 +64,9 @@ public partial class CrouchSystem(World world) : BaseSystem<World, uint>(world)
             crouchConfig.ToCrouched.Apply(entity);
         
         if (!crouchState.IsCrouched && crouchState.WasCrouched)
+        {
             crouchConfig.ToUncrouched.Apply(entity);
+        }
 
         crouchState.WasCrouched = crouchState.IsCrouched;
     }

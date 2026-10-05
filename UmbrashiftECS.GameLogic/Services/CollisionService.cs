@@ -80,6 +80,46 @@ public static partial class CollisionService
         }
         return false;
     }
+
+    public static bool IsCollidingWith<TBody>(in Entity entity, in OffsetAabbCollider collider)
+    {
+        foreach (var chunk in World.Worlds[entity.WorldId].Query(GetSolidQueryDescription<TBody>()).GetChunkIterator())
+        {
+            foreach (var index in chunk)
+            {
+                var otherEntity = chunk.Entity(index);
+                if (IsColliding(collider, entity, otherEntity)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsColliding(
+        in OffsetAabbCollider collider,
+        in Entity entity1,
+        in Entity entity2)
+    {
+        if (entity1.TryGet<Layer>(out var layer1) && entity2.TryGet<Layer>(out var layer2) && layer1 != layer2)
+        {
+            return false;
+        }
+
+        if (!entity1.TryGet<Position>(out var pos1) || !entity2.TryGet<Position>(out var pos2))
+        {
+            Debug.Fail("no position!");
+            return false;
+        }
+
+        if (entity2.TryGet<AabbCollider>(out var aabb2))
+            return AabbToOffsetAabb(aabb2, pos2, collider, pos1);
+
+        if (entity2.TryGet<OffsetAabbCollider>(out var offsetAabb2))
+            return OffsetAabbToOffsetAabb(collider, pos1, offsetAabb2, pos2);
+
+        return false;
+    }
+
     //
     // [Query]
     // private static void GetCollidingEntities<TBody>(

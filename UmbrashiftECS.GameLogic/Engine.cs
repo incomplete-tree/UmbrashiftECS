@@ -11,27 +11,48 @@ public class Engine : IDisposable
     public uint CurrentFrame;
     private Group<uint> _systems;
     private PlayerInputSystem _playerInputSystem;
+    private bool _initialized;
     
     public void Initialize()
     {
+        if (_initialized)
+        {
+            throw new InvalidOperationException("The engine is already initialized.");
+        }
+
+        CurrentFrame = 200; // not 0 because that bugs input buffers.
         MainWorld = World.Create();
         _playerInputSystem = new PlayerInputSystem(MainWorld);
-        _systems = new Group<uint>("Umbrashift",
-            _playerInputSystem, // First gather input
+
+        var inputSystems = new Group<uint>("Input",
+            _playerInputSystem);
+        var gameplaySystems = new Group<uint>("Gameplay",
             new LayerToggleSystem(MainWorld),
             new GroundedCheckSystem(MainWorld),
             new JumpSystem(MainWorld),
             new CrouchSystem(MainWorld),
+            new GravitySystem(MainWorld));
+        var movementSystems = new Group<uint>("Movement",
             new ApplyVelocitySystem(MainWorld),
             new DashSystem(MainWorld),
             new ActorCollisionSystem(MainWorld),
-            new DashCollisionSystem(MainWorld),
             new MovementSystem(MainWorld));
+
+        _systems = new Group<uint>("Umbrashift",
+            inputSystems,
+            gameplaySystems,
+            movementSystems);
         _systems.Initialize();
+        _initialized = true;
     }
 
     public void Update(params PlayerInputStateDTO[] inputs)
     {
+        if (!_initialized || _systems is null || _playerInputSystem is null)
+        {
+            throw new InvalidOperationException("The engine must be initialized before updating.");
+        }
+
         CurrentFrame++;
         foreach (var input in inputs)
         {
@@ -46,7 +67,16 @@ public class Engine : IDisposable
 
     public void Dispose()
     {
-        _systems.Dispose();
+        if (!_initialized)
+        {
+            return;
+        }
+
+        _systems?.Dispose();
+        MainWorld.Dispose();
+        _systems = null;
+        _playerInputSystem = null;
+        _initialized = false;
         GC.SuppressFinalize(this);
     }
 }

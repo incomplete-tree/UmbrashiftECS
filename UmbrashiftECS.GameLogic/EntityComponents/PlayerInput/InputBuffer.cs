@@ -7,29 +7,42 @@ public struct InputBuffer
     public uint BufferFrames;
 
     public uint LastDashPressedFrame;
-    public bool LastDashPressHandled;
+    public bool LastDashPressHandled = true;
 
     public uint LastDashReleasedFrame;
-    public bool LastDashReleaseHandled;
+    public bool LastDashReleaseHandled = true;
     
     public uint LastJumpPressedFrame;
-    public bool LastJumpPressHandled;
+    public bool LastJumpPressHandled = true;
 
     public uint LastJumpReleasedFrame;
-    public bool LastJumpReleaseHandled;
+    public bool LastJumpReleaseHandled = true;
     
     public uint LastAttackPressedFrame;
-    public bool LastAttackPressHandled;
+    public bool LastAttackPressHandled = true;
 
     public uint LastAttackReleasedFrame;
-    public bool LastAttackReleaseHandled;
+    public bool LastAttackReleaseHandled = true;
     
     public uint LastTogglePressedFrame;
-    public bool LastTogglePressHandled;
+    public bool LastTogglePressHandled = true;
 
     public uint LastToggleReleasedFrame;
-    public bool LastToggleReleaseHandled;
-    
+    public bool LastToggleReleaseHandled = true;
+
+    public InputBuffer()
+    {
+        BufferFrames = 0;
+        LastDashPressedFrame = 0;
+        LastDashReleasedFrame = 0;
+        LastJumpPressedFrame = 0;
+        LastJumpReleasedFrame = 0;
+        LastAttackPressedFrame = 0;
+        LastAttackReleasedFrame = 0;
+        LastTogglePressedFrame = 0;
+        LastToggleReleasedFrame = 0;
+    }
+
     [Pure]
     public bool IsBuffered(uint currentFrame, uint actionFrame, bool handled = false)
     {

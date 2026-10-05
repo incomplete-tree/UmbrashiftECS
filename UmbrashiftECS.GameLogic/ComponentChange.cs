@@ -17,11 +17,7 @@ public struct EntityChangeSingleComponent : IEntityChangeMultiComponent
     {
         foreach (var change in Changes)
         {
-            if (entity.TryGet(change.ComponentType, out object component))
-            {
-                component = change.Apply(component);
-                entity.Set(component);
-            }
+            change.Apply(entity);
         }
     }
 }
@@ -31,20 +27,25 @@ public struct EntityChangeSingleComponent : IEntityChangeMultiComponent
 /// </summary>
 public struct EntityChangeSingleComponent<T> : IEntityChangeSingleComponent
 {
+    private readonly Func<T, T> _apply;
+
     public EntityChangeSingleComponent(Func<T, T> apply)
     {
-        ComponentType = typeof(T);
-        Apply = (component) => apply((T)component);
+        _apply = apply;
     }
-    public Func<object, object> Apply { get; set; }
 
-    public Type ComponentType { get; set; }
+    public void Apply(Entity entity)
+    {
+        if (entity.TryGet<T>(out var component))
+        {
+            entity.Set(_apply(component));
+        }
+    }
 }
 
 public interface IEntityChangeSingleComponent
 {
-    public Func<object, object> Apply { get;}
-    public Type ComponentType { get;}
+    public void Apply(Entity entity);
 }
 
 public interface IEntityChangeMultiComponent

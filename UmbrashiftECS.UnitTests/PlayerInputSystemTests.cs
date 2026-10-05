@@ -37,7 +37,7 @@ public class PlayerInputSystemTests
 
         Assert.Equal(Direction8.Right, slot0.Get<InputState>().ArrowsDirection);
         Assert.Equal(Direction8.Left, slot2.Get<InputState>().ArrowsDirection);
-        Assert.Equal((uint)1, slot2.Get<InputBuffer>().LastJumpPressedFrame);
+        Assert.Equal(engine.CurrentFrame, slot2.Get<InputBuffer>().LastJumpPressedFrame);
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class PlayerInputSystemTests
 
         system.SetInput(new PlayerInputStateDTO { InputBindingSlot = 2 }, currentFrame: 14);
 
-        Assert.Equal((uint)13, inputBuffer.LastAttackReleasedFrame);
+        Assert.Equal((uint)13, player.Get<InputBuffer>().LastAttackReleasedFrame);
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public class PlayerInputSystemTests
         engine.Update();
 
         Assert.False(player.Get<InputState>().IsAttackPressed);
-        Assert.Equal((uint)2, player.Get<InputBuffer>().LastAttackReleasedFrame);
+        Assert.Equal(engine.CurrentFrame, player.Get<InputBuffer>().LastAttackReleasedFrame);
         Assert.False(player.Get<InputBuffer>().LastAttackReleaseHandled);
     }
 }

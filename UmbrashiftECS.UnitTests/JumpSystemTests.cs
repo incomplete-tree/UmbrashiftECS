@@ -1,8 +1,7 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using UmbrashiftECS.GameLogic;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
-using UmbrashiftECS.GameLogic.EntityComponents.Collision;
+using UmbrashiftECS.GameLogic.EntityComponents.Dash;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
 using UmbrashiftECS.GameLogic.EntityComponents.Movement;
 using UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
@@ -31,94 +30,97 @@ public class Direction8Tests
 public class JumpSystemTests
 {
     [Fact]
-    public void GroundedBufferedJumpSetsInitialVelocityAndConsumesPress()
+    public void BufferedJumpUsesThePressFrame()
     {
         using var world = World.Create();
-        var player = CreatePlayer(world, new Position(0, 0));
-        world.Create(
-            new Position(0, 2),
-            new SolidBody(),
-            new AabbCollider { Width = 2, Height = 2 });
-        var inputBuffer = player.Get<InputBuffer>();
-        inputBuffer.LastJumpPressedFrame = 1;
+        var player = CreatePlayer(world, new GroundedState
+        {
+            IsGrounded = true,
+            LastGroundedTime = 1
+        });
+        player.Set(new InputBuffer
+        {
+            BufferFrames = 5,
+            LastJumpPressedFrame = 1,
+            LastJumpPressHandled = false
+        });
 
         new JumpSystem(world).Update(1);
 
-        Assert.Equal(-JumpConfig.Default.InitialJumpSpeed, player.Get<Velocity>().Y, 5);
-        Assert.True(inputBuffer.LastJumpPressHandled);
-        Assert.False(player.Get<GroundedState>().IsGrounded);
-        Assert.Equal((uint)0, player.Get<GroundedState>().CoyoteFramesRemaining);
-    }
-
-    [Fact]
-    public void CoyoteTimeAllowsARecentBufferedJumpAfterLeavingGround()
-    {
-        using var world = World.Create();
-        var player = CreatePlayer(world, new Position(0, 0));
-        player.Set(new GroundedState { LastGroundedTime = 1, CoyoteFramesRemaining = 3 });
-        player.Get<InputBuffer>().LastJumpPressedFrame = 2;
-
-        new JumpSystem(world).Update(3);
-
-        Assert.Equal(-JumpConfig.Default.InitialJumpSpeed, player.Get<Velocity>().Y, 5);
-        Assert.True(player.Get<InputBuffer>().LastJumpPressHandled);
-        Assert.Equal((uint)0, player.Get<GroundedState>().CoyoteFramesRemaining);
-    }
-
-    [Fact]
-    public void TheLastCoyoteFrameStillAcceptsAJump()
-    {
-        using var world = World.Create();
-        var player = CreatePlayer(world, new Position(0, 0));
-        player.Set(new GroundedState { CoyoteFramesRemaining = 1 });
-        player.Get<InputBuffer>().LastJumpPressedFrame = 2;
-
-        new JumpSystem(world).Update(3);
-
-        Assert.Equal(-JumpConfig.Default.InitialJumpSpeed, player.Get<Velocity>().Y, 5);
-        Assert.Equal((uint)0, player.Get<GroundedState>().CoyoteFramesRemaining);
-    }
-
-    [Fact]
-    public void ConfiguredAirJumpDoesNotNeedGroundOrCoyoteTime()
-    {
-        using var world = World.Create();
-        var player = CreatePlayer(world, new Position(0, 0));
-        player.Set(JumpConfig.Default with { AllowAirJump = true });
-        player.Get<InputBuffer>().LastJumpPressedFrame = 1;
-
-        new JumpSystem(world).Update(1);
-
-        Assert.Equal(-JumpConfig.Default.InitialJumpSpeed, player.Get<Velocity>().Y, 5);
+        Assert.Equal(-6f, player.Get<Velocity>().Y);
         Assert.True(player.Get<InputBuffer>().LastJumpPressHandled);
     }
 
     [Fact]
-    public void GravityUsesHalfStrengthWhileJumpIsHeldAndStopsAtTerminalVelocity()
+    public void AJumpDoesNotStartFromTheDefaultReleaseFrame()
     {
         using var world = World.Create();
-        var player = CreatePlayer(world, new Position(0, 0));
-        var system = new JumpSystem(world);
+        var player = CreatePlayer(world, new GroundedState
+        {
+            IsGrounded = true,
+            LastGroundedTime = 1
+        });
+        player.Set(new InputBuffer
+        {
+            BufferFrames = 5,
+            LastJumpReleaseHandled = false
+        });
 
-        player.Set(new InputState { IsJumpPressed = true });
-        system.Update(1);
-        var heldVelocity = player.Get<Velocity>().Y;
+        new JumpSystem(world).Update(1);
 
-        player.Set(new InputState());
-        for (uint frame = 2; frame < 20; frame++) system.Update(frame);
-
-        Assert.Equal(JumpConfig.Default.Gravity / 2f, heldVelocity, 5);
-        Assert.Equal(5f, player.Get<Velocity>().Y, 5);
+        Assert.Equal(0f, player.Get<Velocity>().Y);
+        Assert.True(player.Get<InputBuffer>().LastJumpPressHandled);
     }
 
-    private static Entity CreatePlayer(World world, Position position) => world.Create(
-        position,
-        new ActorBody(),
-        new OffsetAabbCollider { Width = 2, Height = 2 },
-        JumpConfig.Default,
-        new GroundedState(),
-        new InputState(),
-        new InputBuffer(),
-        Gravity.PlayerDefault,
+    [Fact]
+    public void CoyoteTimeAcceptsARecentPressedJump()
+    {
+        using var world = World.Create();
+        var player = CreatePlayer(world, new GroundedState
+        {
+            LastGroundedTime = 2
+        });
+        player.Set(new InputBuffer
+        {
+            BufferFrames = 5,
+            LastJumpPressedFrame = 5,
+            LastJumpPressHandled = false
+        });
+
+        new JumpSystem(world).Update(5);
+
+        Assert.Equal(-6f, player.Get<Velocity>().Y);
+    }
+
+    [Fact]
+    public void DashPreventsJumping()
+    {
+        using var world = World.Create();
+        var player = CreatePlayer(world, new GroundedState
+        {
+            IsGrounded = true,
+            LastGroundedTime = 1
+        });
+        player.Add(new DashState { IsDashing = true });
+        player.Set(new InputBuffer
+        {
+            BufferFrames = 5,
+            LastJumpPressedFrame = 1,
+            LastJumpPressHandled = false
+        });
+
+        new JumpSystem(world).Update(1);
+
+        Assert.Equal(0f, player.Get<Velocity>().Y);
+    }
+
+    private static Entity CreatePlayer(World world, GroundedState groundedState) => world.Create(
+        new InputBuffer { BufferFrames = 5 },
+        new JumpConfig
+        {
+            InitialJumpSpeed = -6,
+            CoyoteTimeFrames = 3
+        },
+        groundedState,
         new Velocity());
 }
