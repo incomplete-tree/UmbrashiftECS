@@ -68,9 +68,9 @@ public static partial class CollisionService
     public static QueryDescription GetSolidQueryDescription<TBody>() =>
         new QueryDescription().WithAll<TBody,Position>().WithAny<AabbCollider, OffsetAabbCollider>();
     
-    public static bool IsCollidingWith<TBody>(World world, in Entity entity, int offsetX=0, int offsetY=0)
+    public static bool IsCollidingWith<TBody>(in Entity entity, int offsetX=0, int offsetY=0)
     {
-        foreach (var chunk in world.Query(GetSolidQueryDescription<TBody>()).GetChunkIterator())
+        foreach (var chunk in World.Worlds[entity.WorldId].Query(GetSolidQueryDescription<TBody>()).GetChunkIterator())
         {
             foreach (var index in chunk)
             {

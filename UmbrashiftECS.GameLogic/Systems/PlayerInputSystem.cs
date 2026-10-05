@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.System;
 using UmbrashiftECS.GameLogic.EntityComponents;
 using UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
@@ -7,12 +9,36 @@ namespace UmbrashiftECS.GameLogic.Systems;
 
 public partial class PlayerInputSystem : BaseSystem<World, uint>
 {
+    private static readonly QueryDescription InputQuery = new QueryDescription()
+        .WithAll<InputBinding, InputState, InputBuffer>();
+
     public PlayerInputSystem(World world) : base(world) { }
 
     public void SetInput(in PlayerInputStateDTO input, uint currentFrame)
     {
         BufferInputQuery(World, input, currentFrame);
         ApplyInputQuery(World, input);
+    }
+
+    public void ClearUnprovidedInputs(IReadOnlyList<PlayerInputStateDTO> inputs, uint currentFrame)
+    {
+        var providedSlots = new HashSet<int>();
+        foreach (var input in inputs) providedSlots.Add(input.InputBindingSlot);
+
+        var missingSlots = new HashSet<int>();
+        foreach (var chunk in World.Query(InputQuery).GetChunkIterator())
+        {
+            foreach (var index in chunk)
+            {
+                var slot = chunk.Entity(index).Get<InputBinding>().InputBindingSlot;
+                if (!providedSlots.Contains(slot)) missingSlots.Add(slot);
+            }
+        }
+
+        foreach (var slot in missingSlots)
+        {
+            SetInput(new PlayerInputStateDTO { InputBindingSlot = slot }, currentFrame);
+        }
     }
 
     [Query]

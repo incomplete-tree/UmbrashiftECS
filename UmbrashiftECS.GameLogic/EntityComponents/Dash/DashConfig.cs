@@ -1,3 +1,6 @@
 namespace UmbrashiftECS.GameLogic.EntityComponents.Dash;
 
-public record struct DashConfig(int Distance, int Duration, int Amount);
+public record struct DashConfig(int Distance, int Duration, int Amount, int FramesTillRefill)
+{
+    public float Speed => Distance / (float)Duration;
+}

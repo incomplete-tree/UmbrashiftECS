@@ -141,4 +141,26 @@ public class PlayerInputSystemTests
 
         Assert.Equal((uint)13, inputBuffer.LastAttackReleasedFrame);
     }
+
+    [Fact]
+    public void EngineReleasesBindingsThatAreOmittedFromAFrame()
+    {
+        using var engine = new Engine();
+        engine.Initialize();
+        var player = engine.MainWorld.Create(
+            new InputBinding { InputBindingSlot = 0 },
+            new InputState(),
+            new InputBuffer());
+
+        engine.Update(new PlayerInputStateDTO
+        {
+            InputBindingSlot = 0,
+            IsAttackPressed = true
+        });
+        engine.Update();
+
+        Assert.False(player.Get<InputState>().IsAttackPressed);
+        Assert.Equal((uint)2, player.Get<InputBuffer>().LastAttackReleasedFrame);
+        Assert.False(player.Get<InputBuffer>().LastAttackReleaseHandled);
+    }
 }

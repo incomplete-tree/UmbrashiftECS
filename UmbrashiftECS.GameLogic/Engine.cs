@@ -18,8 +18,14 @@ public class Engine : IDisposable
         _playerInputSystem = new PlayerInputSystem(MainWorld);
         _systems = new Group<uint>("Umbrashift",
             _playerInputSystem, // First gather input
+            new LayerToggleSystem(MainWorld),
+            new GroundedCheckSystem(MainWorld),
+            new JumpSystem(MainWorld),
+            new CrouchSystem(MainWorld),
             new ApplyVelocitySystem(MainWorld),
+            new DashSystem(MainWorld),
             new ActorCollisionSystem(MainWorld),
+            new DashCollisionSystem(MainWorld),
             new MovementSystem(MainWorld));
         _systems.Initialize();
     }
@@ -31,6 +37,7 @@ public class Engine : IDisposable
         {
             _playerInputSystem.SetInput(input, CurrentFrame);
         }
+        _playerInputSystem.ClearUnprovidedInputs(inputs, CurrentFrame);
 
         _systems.BeforeUpdate(CurrentFrame);
         _systems.Update(CurrentFrame);

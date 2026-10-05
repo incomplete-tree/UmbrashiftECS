@@ -6,5 +6,6 @@ public record struct JumpConfig
     public int JumpDistance;
     public int JumpDuration;
     public int JumpHeight;
-    
+    public bool AllowAirJump;
+    public uint CoyoteTimeFrames;
 }

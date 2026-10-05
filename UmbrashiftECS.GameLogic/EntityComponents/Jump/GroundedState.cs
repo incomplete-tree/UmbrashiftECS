@@ -1,6 +1,7 @@
 namespace UmbrashiftECS.GameLogic.EntityComponents.Jump;
 
-public class JumpState
+public struct GroundedState
 {
     public uint LastGroundedTime;
+    public bool IsGrounded;
 }

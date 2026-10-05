@@ -1,4 +1,5 @@
 using System;
+using Arch.Bus;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
@@ -20,16 +21,17 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
             ? value
             : default;
 
-        CheckX(entity, position.X, remainder.X, ref movementDelta.X);
-        MoveY(entity, position.Y, remainder.Y, ref movementDelta.Y);
-    }
-    
-    public void CheckX(in Entity actor, ref int amount)
-    {
-        ClampX(actor, ref amount);
+        var collided = CheckX(entity, position.X, remainder.X, ref movementDelta.X);
+        collided |= CheckY(entity, position.Y, remainder.Y, ref movementDelta.Y);
+
+        if (collided)
+        {
+            var hitWallEvent = new ActorHitWallEvent(entity);
+            EventBus.Send(in hitWallEvent);
+        }
     }
 
-    private void CheckX(in Entity actor, int position, float remainder, ref float amount)
+    private bool CheckX(in Entity actor, int position, float remainder, ref float amount)
     {
         var targetPosition = (int)(amount + position + remainder);
         var integerAmount = targetPosition - position;
@@ -37,12 +39,15 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
         if (ClampX(actor, ref integerAmount))
         {
             amount = integerAmount - remainder;
+            return true;
         }
+
+        return false;
     }
 
     private bool ClampX(in Entity actor, ref int amount)
     {
-        if (!CollisionService.IsCollidingWith<SolidBody>(World, actor, offsetX: amount))
+        if (!CollisionService.IsCollidingWith<SolidBody>(actor, offsetX: amount))
         {
             return false;
         }
@@ -50,7 +55,7 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
         var direction = Math.Sign(amount);
         for (var checkedAmount = 0; checkedAmount != amount; checkedAmount += direction)
         {
-            if (CollisionService.IsCollidingWith<SolidBody>(World, actor, offsetX: checkedAmount + direction))
+            if (CollisionService.IsCollidingWith<SolidBody>(actor, offsetX: checkedAmount + direction))
             {
                 amount = checkedAmount;
                 return true;
@@ -60,12 +65,7 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
         return true;
     }
     
-    public void MoveY(in Entity actor, ref int amount)
-    {
-        ClampY(actor, ref amount);
-    }
-
-    private void MoveY(in Entity actor, int position, float remainder, ref float amount)
+    private bool CheckY(in Entity actor, int position, float remainder, ref float amount)
     {
         var targetPosition = (int)(amount + position + remainder);
         var integerAmount = targetPosition - position;
@@ -73,12 +73,15 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
         if (ClampY(actor, ref integerAmount))
         {
             amount = integerAmount - remainder;
+            return true;
         }
+
+        return false;
     }
 
     private bool ClampY(in Entity actor, ref int amount)
     {
-        if (!CollisionService.IsCollidingWith<SolidBody>(World, actor, offsetY: amount))
+        if (!CollisionService.IsCollidingWith<SolidBody>(actor, offsetY: amount))
         {
             return false;
         }
@@ -86,7 +89,7 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
         var direction = Math.Sign(amount);
         for (var checkedAmount = 0; checkedAmount != amount; checkedAmount += direction)
         {
-            if (CollisionService.IsCollidingWith<SolidBody>(World, actor, offsetY: checkedAmount + direction))
+            if (CollisionService.IsCollidingWith<SolidBody>(actor, offsetY: checkedAmount + direction))
             {
                 amount = checkedAmount;
                 return true;
@@ -97,4 +100,4 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
     }
 }
 
-public record struct ActorHitWallEvent(Entity Actor, Entity Solid);
+public record struct ActorHitWallEvent(Entity Actor);

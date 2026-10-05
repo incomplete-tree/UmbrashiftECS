@@ -98,7 +98,7 @@ public class CollisionServiceTests
         CollisionTestEntities.Solid(world, new Position(3, 0), 1, 2);
         CollisionTestEntities.Aabb(world, new Position(0, 0), 2, 2);
 
-        Assert.Equal(expected, CollisionService.IsCollidingWith<SolidBody>(world, actor, offsetX: offsetX));
+        Assert.Equal(expected, CollisionService.IsCollidingWith<SolidBody>(actor, offsetX: offsetX));
     }
 
     [Theory]
@@ -110,7 +110,7 @@ public class CollisionServiceTests
         var actor = CollisionTestEntities.Actor(world, new Position(0, 0), 2, 2);
         CollisionTestEntities.Solid(world, new Position(5, 0), 5, 2);
 
-        Assert.Equal(expected, CollisionService.IsCollidingWith<SolidBody>(world, actor, offsetX: offsetX));
+        Assert.Equal(expected, CollisionService.IsCollidingWith<SolidBody>(actor, offsetX: offsetX));
     }
 }
 
