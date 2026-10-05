@@ -268,6 +268,7 @@ internal static class CollisionTestEntities
             position,
             new ActorBody(),
             new OffsetAabbCollider { Width = 2, Height = 2 },
+            new Velocity(),
             remainder,
             movementDelta);
     }
