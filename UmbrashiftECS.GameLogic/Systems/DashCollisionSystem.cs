@@ -15,10 +15,7 @@ public partial class DashCollisionSystem(World world) : BaseSystem<World, uint>(
         if (@event.Actor.TryGet<DashState>(out var state) && state.IsDashing)
         {
             state.IsDashing = false;
-            if (!@event.Actor.Get<DashConfig>().PreserveVelocityAfterCollision)
-            {
-                @event.Actor.Set<Velocity>(default);
-            }
+            @event.Actor.Set<Velocity>(default);
         }
     }
 }
