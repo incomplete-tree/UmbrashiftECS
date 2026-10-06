@@ -31,6 +31,8 @@ public class Engine : IDisposable
             new GroundedCheckSystem(MainWorld),
             new JumpSystem(MainWorld),
             new CrouchSystem(MainWorld),
+            new WalkingSystem(MainWorld),
+            new FrictionSystem(MainWorld),
             new GravitySystem(MainWorld));
         var movementSystems = new Group<uint>("Movement",
             new ApplyVelocitySystem(MainWorld),
