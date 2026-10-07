@@ -27,6 +27,8 @@ public class Engine : IDisposable
         var inputSystems = new Group<uint>("Input",
             _playerInputSystem);
         var gameplaySystems = new Group<uint>("Gameplay",
+            new KillOutOfBoundsSystem(MainWorld),
+            new RespawnSystem(MainWorld),
             new LayerToggleSystem(MainWorld),
             new GroundedCheckSystem(MainWorld),
             new JumpSystem(MainWorld),

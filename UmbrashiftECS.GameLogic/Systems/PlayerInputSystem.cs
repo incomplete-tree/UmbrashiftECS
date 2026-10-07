@@ -45,11 +45,14 @@ public partial class PlayerInputSystem : BaseSystem<World, uint>
     [Query]
     private static void ApplyInput(
         [Data] in PlayerInputStateDTO input,
+        in Entity entity,
         in InputBinding inputBinding,
         ref InputState inputState)
     {
         if (inputBinding.InputBindingSlot != input.InputBindingSlot) return;
 
+        if (entity.Has<Dead>()) inputState = new InputState();
+        
         inputState = new InputState
         {
             ArrowsDirection = input.ArrowsDirection,
