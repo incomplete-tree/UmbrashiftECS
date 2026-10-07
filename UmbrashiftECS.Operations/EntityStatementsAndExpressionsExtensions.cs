@@ -48,6 +48,13 @@ public static class EntityStatementsAndExpressionsExtensions
                 ExecuteSetField(setField, entity);
                 return;
             
+            case SequenceStatement sequenceStatement:
+                foreach (var partOfSeqStatement in sequenceStatement.Statements)
+                {
+                    partOfSeqStatement.Execute(entity);
+                }
+
+                return;
             default:
                 throw new NotImplementedException();
                 return;

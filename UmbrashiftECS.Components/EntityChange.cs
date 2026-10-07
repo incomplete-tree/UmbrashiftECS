@@ -20,3 +20,5 @@ public record IfElseStatement(
     : ComponentStatement;
 
 public record SetFieldStatement(string ComponentName, string FieldName, EntityExpression Value) : ComponentStatement;
+
+public record SequenceStatement(params ComponentStatement[] Statements) : ComponentStatement;
