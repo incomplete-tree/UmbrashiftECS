@@ -1,9 +1,9 @@
 using Arch.Core;
 using Arch.System;
+using UmbrashiftECS.Components.EntityComponents.Walk;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
 using UmbrashiftECS.GameLogic.EntityComponents.Movement;
 using UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
-using UmbrashiftECS.GameLogic.EntityComponents.Walk;
 
 namespace UmbrashiftECS.GameLogic.Systems;
 

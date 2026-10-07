@@ -1,4 +1,4 @@
-namespace UmbrashiftECS.GameLogic;
+namespace UmbrashiftECS.Components;
 
 public enum Direction8 : byte
 {

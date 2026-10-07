@@ -9,4 +9,10 @@
         <PackageReference Include="Arch.System.SourceGenerator" Version="2.1.0" />
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\UmbrashiftECS.Components\UmbrashiftECS.Components.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="EntityComponents\Collision\" />
+    </ItemGroup>
 </Project>

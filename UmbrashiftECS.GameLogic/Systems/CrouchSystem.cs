@@ -1,7 +1,8 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
-using UmbrashiftECS.GameLogic.EntityComponents.Collision;
+using UmbrashiftECS.Components.EntityComponents;
+using UmbrashiftECS.Components.EntityComponents.Collision;
 using UmbrashiftECS.GameLogic.EntityComponents.Crouch;
 using UmbrashiftECS.GameLogic.EntityComponents.Dash;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
@@ -60,13 +61,7 @@ public partial class CrouchSystem(World world) : BaseSystem<World, uint>(world)
     [Query]
     public void ApplyCrouchChanges(in Entity entity, ref CrouchState crouchState, in CrouchConfig crouchConfig)
     {
-        if (crouchState.IsCrouched && !crouchState.WasCrouched)
-            crouchConfig.ToCrouched.Apply(entity);
-        
-        if (!crouchState.IsCrouched && crouchState.WasCrouched)
-        {
-            crouchConfig.ToUncrouched.Apply(entity);
-        }
+        // TODO events
 
         crouchState.WasCrouched = crouchState.IsCrouched;
     }

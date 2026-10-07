@@ -1,6 +1,4 @@
-using System;
-
-namespace UmbrashiftECS.GameLogic.EntityComponents.Respawn;
+namespace UmbrashiftECS.Components.EntityComponents.Respawn;
 
 public struct ActiveRespawnPoint
 {

@@ -1,4 +1,4 @@
-namespace UmbrashiftECS.GameLogic.EntityComponents.Walk;
+namespace UmbrashiftECS.Components.EntityComponents.Walk;
 
 public record struct WalkConfig
 {

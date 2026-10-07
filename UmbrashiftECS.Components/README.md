@@ -1,0 +1,1 @@
+This project holds all the persisten components. See the [EntityComponents](EntityComponents) folder.

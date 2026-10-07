@@ -1,5 +1,7 @@
 using Arch.Core;
 using Arch.Core.Extensions;
+using UmbrashiftECS.Components;
+using UmbrashiftECS.Components.EntityComponents;
 using UmbrashiftECS.GameLogic;
 using UmbrashiftECS.GameLogic.EntityComponents.Dash;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;

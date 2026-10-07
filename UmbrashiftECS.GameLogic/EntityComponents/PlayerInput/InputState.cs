@@ -1,3 +1,5 @@
+using UmbrashiftECS.Components;
+
 namespace UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
 
 public record struct InputState

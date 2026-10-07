@@ -1,4 +1,4 @@
-namespace UmbrashiftECS.GameLogic.EntityComponents.Jump;
+namespace UmbrashiftECS.Components.EntityComponents;
 
 public record struct JumpConfig
 {

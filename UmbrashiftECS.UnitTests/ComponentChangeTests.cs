@@ -1,7 +1,8 @@
 using Arch.Core;
 using Arch.Core.Extensions;
+using UmbrashiftECS.Components;
+using UmbrashiftECS.Components.EntityComponents.Basic;
 using UmbrashiftECS.GameLogic;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
 
 namespace UmbrashiftECS.UnitTests;
 

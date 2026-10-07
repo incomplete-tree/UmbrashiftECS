@@ -1,4 +1,4 @@
-namespace UmbrashiftECS.GameLogic.EntityComponents.Basic;
+namespace UmbrashiftECS.Components.EntityComponents.Basic;
 
 public enum Layer
 {

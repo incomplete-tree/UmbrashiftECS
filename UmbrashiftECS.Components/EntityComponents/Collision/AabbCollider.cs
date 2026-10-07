@@ -1,4 +1,4 @@
-namespace UmbrashiftECS.GameLogic.EntityComponents.Collision;
+namespace UmbrashiftECS.Components.EntityComponents.Collision;
 
 public struct AabbCollider
 {

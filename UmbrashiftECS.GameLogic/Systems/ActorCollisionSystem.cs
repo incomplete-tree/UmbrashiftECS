@@ -3,9 +3,9 @@ using Arch.Bus;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
+using UmbrashiftECS.Components.EntityComponents.Basic;
+using UmbrashiftECS.Components.EntityComponents.Collision;
 using UmbrashiftECS.GameLogic.EntityComponents.Actors;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
-using UmbrashiftECS.GameLogic.EntityComponents.Collision;
 using UmbrashiftECS.GameLogic.EntityComponents.Movement;
 using UmbrashiftECS.GameLogic.Services;
 

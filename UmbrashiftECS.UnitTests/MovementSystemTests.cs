@@ -1,7 +1,7 @@
 using Arch.Core;
 using Arch.Core.Extensions;
+using UmbrashiftECS.Components.EntityComponents.Basic;
 using UmbrashiftECS.GameLogic.EntityComponents.Actors;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
 using UmbrashiftECS.GameLogic.EntityComponents.Movement;
 using UmbrashiftECS.GameLogic.Systems;
 

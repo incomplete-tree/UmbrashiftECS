@@ -3,9 +3,9 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using UmbrashiftECS.Components.EntityComponents.Basic;
 using UmbrashiftECS.GameLogic.EntityComponents;
 using UmbrashiftECS.GameLogic.EntityComponents.Actors;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
 using UmbrashiftECS.GameLogic.EntityComponents.Movement;
 
 namespace UmbrashiftECS.GameLogic.Systems;

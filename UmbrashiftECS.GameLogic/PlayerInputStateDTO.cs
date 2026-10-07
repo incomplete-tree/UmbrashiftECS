@@ -1,3 +1,5 @@
+using UmbrashiftECS.Components;
+
 namespace UmbrashiftECS.GameLogic;
 
 public record struct PlayerInputStateDTO

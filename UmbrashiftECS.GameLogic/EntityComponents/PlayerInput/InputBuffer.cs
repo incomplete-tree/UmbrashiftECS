@@ -4,7 +4,7 @@ namespace UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
 
 public struct InputBuffer
 {
-    public uint BufferFrames;
+    public uint BufferFrames = 5;
 
     public uint LastDashPressedFrame;
     public bool LastDashPressHandled = true;
@@ -32,15 +32,6 @@ public struct InputBuffer
 
     public InputBuffer()
     {
-        BufferFrames = 0;
-        LastDashPressedFrame = 0;
-        LastDashReleasedFrame = 0;
-        LastJumpPressedFrame = 0;
-        LastJumpReleasedFrame = 0;
-        LastAttackPressedFrame = 0;
-        LastAttackReleasedFrame = 0;
-        LastTogglePressedFrame = 0;
-        LastToggleReleasedFrame = 0;
     }
 
     [Pure]

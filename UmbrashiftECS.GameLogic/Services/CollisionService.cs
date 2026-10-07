@@ -4,8 +4,8 @@ using System.Net;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
-using UmbrashiftECS.GameLogic.EntityComponents.Collision;
+using UmbrashiftECS.Components.EntityComponents.Basic;
+using UmbrashiftECS.Components.EntityComponents.Collision;
 
 namespace UmbrashiftECS.GameLogic.Services;
 

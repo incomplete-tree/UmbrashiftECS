@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
+using UmbrashiftECS.Components.EntityComponents;
 using UmbrashiftECS.GameLogic.EntityComponents;
 using UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
 

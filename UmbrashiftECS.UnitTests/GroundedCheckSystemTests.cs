@@ -1,7 +1,7 @@
 using Arch.Core;
 using Arch.Core.Extensions;
-using UmbrashiftECS.GameLogic.EntityComponents.Basic;
-using UmbrashiftECS.GameLogic.EntityComponents.Collision;
+using UmbrashiftECS.Components.EntityComponents.Basic;
+using UmbrashiftECS.Components.EntityComponents.Collision;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
 using UmbrashiftECS.GameLogic.Systems;
 

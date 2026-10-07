@@ -8,6 +8,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.KniWebDemo", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.KniWebDemo.UnitTests", "UmbrashiftECS.KniWebDemo.UnitTests\UmbrashiftECS.KniWebDemo.UnitTests.csproj", "{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Serialization", "UmbrashiftECS.Serialization\UmbrashiftECS.Serialization.csproj", "{2C0B4FB5-9303-42DE-9B22-E3A720A70ACF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Components", "UmbrashiftECS.Components\UmbrashiftECS.Components.csproj", "{724346EF-A022-4F42-A28F-199937699530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Operations", "UmbrashiftECS.Operations\UmbrashiftECS.Operations.csproj", "{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +36,17 @@ Global
 		{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C0B4FB5-9303-42DE-9B22-E3A720A70ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C0B4FB5-9303-42DE-9B22-E3A720A70ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C0B4FB5-9303-42DE-9B22-E3A720A70ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C0B4FB5-9303-42DE-9B22-E3A720A70ACF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{724346EF-A022-4F42-A28F-199937699530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{724346EF-A022-4F42-A28F-199937699530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{724346EF-A022-4F42-A28F-199937699530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{724346EF-A022-4F42-A28F-199937699530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

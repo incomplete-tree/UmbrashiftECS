@@ -1,7 +1,7 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
-using UmbrashiftECS.GameLogic.EntityComponents.Collision;
+using UmbrashiftECS.Components.EntityComponents.Collision;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
 using UmbrashiftECS.GameLogic.Services;
 

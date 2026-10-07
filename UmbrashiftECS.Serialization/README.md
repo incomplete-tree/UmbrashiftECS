@@ -1,0 +1,1 @@
+This folder is the project that will handle serialization. This includes prefabs, component groups, assets, etc. This allows a level editor to exist.
