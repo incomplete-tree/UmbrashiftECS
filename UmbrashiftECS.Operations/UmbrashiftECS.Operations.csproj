@@ -11,9 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Arch">
-        <HintPath>..\..\..\..\.nuget\packages\arch\2.1.0-beta\lib\net8.0\Arch.dll</HintPath>
-      </Reference>
+      <PackageReference Include="Arch" Version="2.1.0"/>
     </ItemGroup>
 
 </Project>

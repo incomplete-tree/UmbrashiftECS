@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.UnitTests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.KniWebDemo", "UmbrashiftECS.KniWebDemo\UmbrashiftECS.KniWebDemo.csproj", "{4D9B8A5B-2B9A-4B4C-9CF8-F991EEC6A64F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Rendering", "UmbrashiftECS.Rendering\UmbrashiftECS.Rendering.csproj", "{8F0A4C3B-1E7D-4E7A-B2C2-F5B4E4D0A9B1}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.KniWebDemo.UnitTests", "UmbrashiftECS.KniWebDemo.UnitTests\UmbrashiftECS.KniWebDemo.UnitTests.csproj", "{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Serialization", "UmbrashiftECS.Serialization\UmbrashiftECS.Serialization.csproj", "{2C0B4FB5-9303-42DE-9B22-E3A720A70ACF}"
@@ -13,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Components", "UmbrashiftECS.Components\UmbrashiftECS.Components.csproj", "{724346EF-A022-4F42-A28F-199937699530}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Operations", "UmbrashiftECS.Operations\UmbrashiftECS.Operations.csproj", "{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.MonoGame", "UmbrashiftECS.MonoGame\UmbrashiftECS.MonoGame.csproj", "{A1C45A44-4E20-4179-AE27-8DDC0414A34D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +36,10 @@ Global
 		{4D9B8A5B-2B9A-4B4C-9CF8-F991EEC6A64F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D9B8A5B-2B9A-4B4C-9CF8-F991EEC6A64F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D9B8A5B-2B9A-4B4C-9CF8-F991EEC6A64F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F0A4C3B-1E7D-4E7A-B2C2-F5B4E4D0A9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F0A4C3B-1E7D-4E7A-B2C2-F5B4E4D0A9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F0A4C3B-1E7D-4E7A-B2C2-F5B4E4D0A9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F0A4C3B-1E7D-4E7A-B2C2-F5B4E4D0A9B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3A3FA3B-EDDE-4A38-9F36-3FE4D66F3A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -48,5 +56,9 @@ Global
 		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D8D54D8-2E2D-4933-95FB-6D2A3B400AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
