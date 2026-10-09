@@ -12,11 +12,17 @@ namespace UmbrashiftECS.Rendering.Services;
 
 public partial class RenderService
 {
+    public static Layer GetCurrentLayer(World world)
+    {
+        var currentLayer = Layer.GameplayLayer0;
+        _GetCurrentLayerQuery(world, ref currentLayer);
+        return currentLayer;
+    }
+
     public static List<RenderCommand> GatherRenderCommands(World world, uint currentFrame, bool showDebugHitboxes = false)
     {
         var result = new List<RenderCommand>();
-        var currentLayer = Layer.GameplayLayer0;
-        _GetCurrentLayerQuery(world, ref currentLayer);
+        var currentLayer = GetCurrentLayer(world);
         
         var otherLayer = currentLayer == Layer.GameplayLayer0
             ? Layer.GameplayLayer1
@@ -38,14 +44,21 @@ public partial class RenderService
     [Query]
     private static void _RenderBasicSprites([Data] List<RenderCommand> result, [Data] uint currentFrame, [Data] Layer layer, [Data] bool isCurrentLayer, in Entity entity, in BasicSpriteRenderer basicSpriteRenderer, in Position position)
     {
-        if (entity.TryGet<Layer>(out var entityLayer) && entityLayer != layer) return;
+        if (entity.TryGet<Layer>(out var entityLayer))
+        {
+            if (entityLayer != layer) return;
+        }
+        else if (!isCurrentLayer)
+        {
+            return;
+        }
         
         result.Add(new RenderCommand(basicSpriteRenderer.PngPath,
             position.X + basicSpriteRenderer.OffsetX,
             position.Y + basicSpriteRenderer.OffsetY,
             Color: isCurrentLayer
                 ? Color.White
-                : Color.FromArgb(128, 255, 255, 255)));
+                : Color.FromArgb(85, 255, 255, 255)));
     }
 
     [Query]
@@ -70,7 +83,7 @@ public partial class RenderService
         var baseColor = colorRenderer.Color;
         var color = isCurrentLayer
             ? baseColor
-            : Color.FromArgb(128, baseColor.R, baseColor.G, baseColor.B);
+            : Color.FromArgb(85, baseColor.R, baseColor.G, baseColor.B);
 
         result.Add(new RenderCommand(
             string.Empty,

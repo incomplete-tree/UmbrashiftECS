@@ -23,17 +23,31 @@ public class DemoEntitySpawner(World world)
 
     public void SpawnAll(int mapWidth = 640, int mapHeight = 360)
     {
+        SpawnBackground();
         SpawnMapBounds(mapWidth, mapHeight);
         SpawnPlayerSpawnPoint();
         SpawnPlayer();
 
+        // Shared floor (no Layer component: solid on both layers)
         SpawnPlatform(0, 316, 640, 44);
-        SpawnPlatform(72, 258, 126, 18);
-        SpawnPlatform(286, 226, 116, 18);
-        SpawnPlatform(474, 274, 108, 18);
 
-        SpawnCrate(new Position(248, 40));
-        SpawnCrate(new Position(438, 20));
+        // Layer 0 platforms (Blue tint)
+        SpawnPlatform(72, 258, 126, 18, Layer.GameplayLayer0);
+        SpawnPlatform(360, 216, 120, 18, Layer.GameplayLayer0);
+        SpawnPlatform(120, 150, 110, 18, Layer.GameplayLayer0);
+
+        // Layer 1 platforms (Purple tint)
+        SpawnPlatform(220, 264, 126, 18, Layer.GameplayLayer1);
+        SpawnPlatform(260, 176, 116, 18, Layer.GameplayLayer1);
+        SpawnPlatform(474, 250, 110, 18, Layer.GameplayLayer1);
+        SpawnPlatform(440, 120, 120, 18, Layer.GameplayLayer1);
+
+        // Crates on specific layers and a shared crate
+        SpawnCrate(new Position(130, 40), Layer.GameplayLayer0);
+        SpawnCrate(new Position(280, 40), Layer.GameplayLayer1);
+        SpawnCrate(new Position(480, 20));
+        
+        
     }
 
     public Entity SpawnPlayer()
@@ -68,7 +82,7 @@ public class DemoEntitySpawner(World world)
             },
             new DashConfig(Distance: 48, Duration: 6, Amount: 1, FramesTillRefill: 10),
             new DashState { AmountRemaining = 1 },
-            new WalkConfig { SpeedInAir = 0.2f, SpeedOnGround = 1 },
+            new WalkConfig { SpeedInAir = 0.1f, SpeedOnGround = 1 },
             new FrictionConfig { Friction = 0.9f },
             Layer.GameplayLayer0,
             new ActiveLayerController(),
@@ -82,13 +96,37 @@ public class DemoEntitySpawner(World world)
             new PlayerSpawnPoint { Id = PlayerSpawnPointId });
     }
 
-    public Entity SpawnPlatform(int x, int y, int width, int height)
+    public Entity SpawnPlatform(int x, int y, int width, int height, Layer? layer = null, System.Drawing.Color? color = null)
     {
+        var platformColor = color ?? (layer switch
+        {
+            Layer.GameplayLayer0 => System.Drawing.Color.FromArgb(91, 120, 190),  // Steel Blue
+            Layer.GameplayLayer1 => System.Drawing.Color.FromArgb(170, 95, 195), // Purple / Violet
+            _ => System.Drawing.Color.FromArgb(91, 111, 151)                    // Neutral Floor
+        });
+
+        if (layer.HasValue)
+        {
+            return world.Create(
+                new Position(x, y),
+                new AabbCollider { Width = width, Height = height },
+                new SolidBody(),
+                layer.Value,
+                new ColorRenderer(platformColor));
+        }
+
         return world.Create(
             new Position(x, y),
             new AabbCollider { Width = width, Height = height },
             new SolidBody(),
-            new ColorRenderer(System.Drawing.Color.FromArgb(91, 111, 151)));
+            new ColorRenderer(platformColor));
+    }
+
+    public Entity SpawnBackground(string texturePath = "background")
+    {
+        return world.Create(
+            new Position(0, 0),
+            new BasicSpriteRenderer(texturePath));
     }
 
     public Entity SpawnMapBounds(int width, int height)
@@ -99,8 +137,30 @@ public class DemoEntitySpawner(World world)
             new MapBounds());
     }
 
-    public Entity SpawnCrate(Position position)
+    public Entity SpawnCrate(Position position, Layer? layer = null)
     {
+        var crateColor = layer switch
+        {
+            Layer.GameplayLayer0 => System.Drawing.Color.FromArgb(235, 110, 85),
+            Layer.GameplayLayer1 => System.Drawing.Color.FromArgb(225, 80, 140),
+            _ => System.Drawing.Color.FromArgb(231, 120, 89)
+        };
+
+        if (layer.HasValue)
+        {
+            return world.Create(
+                position,
+                new ActorBody(),
+                new AabbCollider { Width = 18, Height = 18 },
+                new InputState(),
+                new Velocity(),
+                new MovementDelta(),
+                new FractionalPositionRemainder(),
+                new GravityConfig { GravityInPixelsPerFrameSquared = 0.35f },
+                layer.Value,
+                new ColorRenderer(crateColor));
+        }
+
         return world.Create(
             position,
             new ActorBody(),
@@ -110,6 +170,6 @@ public class DemoEntitySpawner(World world)
             new MovementDelta(),
             new FractionalPositionRemainder(),
             new GravityConfig { GravityInPixelsPerFrameSquared = 0.35f },
-            new ColorRenderer(System.Drawing.Color.FromArgb(231, 120, 89)));
+            new ColorRenderer(crateColor));
     }
 }

@@ -24,7 +24,7 @@ public static class RenderCommandExecutor
         var texture = GetTexture(graphicsDevice, command.TexturePath);
         
         var color = command.Color.HasValue
-            ? new XnaColor(command.Color.Value.R, command.Color.Value.G, command.Color.Value.B, command.Color.Value.A)
+            ? new XnaColor(command.Color.Value.R, command.Color.Value.G, command.Color.Value.B) * (command.Color.Value.A / 255f)
             : XnaColor.White;
 
         XnaRectangle? sourceRect = command.SourceRect.HasValue
@@ -148,11 +148,14 @@ public static class RenderCommandExecutor
 
         if (!Path.HasExtension(texturePath))
         {
-            var withPng = texturePath + ".png";
-            candidates.Add(withPng);
-            candidates.Add(Path.Combine(baseDir, withPng));
-            candidates.Add(Path.Combine("Content", withPng));
-            candidates.Add(Path.Combine(baseDir, "Content", withPng));
+            foreach (var ext in new[] { ".png", ".jpg", ".jpeg" })
+            {
+                var withExt = texturePath + ext;
+                candidates.Add(withExt);
+                candidates.Add(Path.Combine(baseDir, withExt));
+                candidates.Add(Path.Combine("Content", withExt));
+                candidates.Add(Path.Combine(baseDir, "Content", withExt));
+            }
         }
 
         foreach (var candidate in candidates)

@@ -1,3 +1,6 @@
+#nullable enable
+
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,12 +13,12 @@ namespace UmbrashiftECS.MonoGame;
 public class UmbrashiftGame : Game
 {
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private SpriteBatch _spriteBatch = null!;
 
-    private UmbrashiftRenderer _renderer;
-    private Engine _engine;
-    private InputCapturer _inputCapturer;
-    private DemoEntitySpawner _spawner;
+    private UmbrashiftRenderer _renderer = null!;
+    private Engine _engine = null!;
+    private InputCapturer _inputCapturer = null!;
+    private DemoEntitySpawner _spawner = null!;
     private bool _spawnWasPressed;
     private bool _showDebugHitboxes;
     private bool _f1WasPressed;
