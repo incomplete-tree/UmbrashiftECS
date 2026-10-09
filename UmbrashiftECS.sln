@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Operations", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.MonoGame", "UmbrashiftECS.MonoGame\UmbrashiftECS.MonoGame.csproj", "{A1C45A44-4E20-4179-AE27-8DDC0414A34D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbrashiftECS.Web", "UmbrashiftECS.Web\UmbrashiftECS.Web.csproj", "{7B62D762-9B94-447E-9774-588D66273EE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1C45A44-4E20-4179-AE27-8DDC0414A34D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B62D762-9B94-447E-9774-588D66273EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B62D762-9B94-447E-9774-588D66273EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B62D762-9B94-447E-9774-588D66273EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B62D762-9B94-447E-9774-588D66273EE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
