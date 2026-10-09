@@ -1,5 +1,6 @@
 using System;
 using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.System;
 using UmbrashiftECS.Components;
 using UmbrashiftECS.Components.EntityComponents;
@@ -16,8 +17,14 @@ public partial class DashSystem(World world) : BaseSystem<World, uint>(world)
     public static void DecrementDashTime(in Entity entity, ref DashState dashState)
     {
         dashState.TimeRemaining--;
-        if (dashState.TimeRemaining <= 0)
+        if (dashState.TimeRemaining == 0)
+        {
             dashState.IsDashing = false;
+            var vel = entity.Get<Velocity>();
+            vel.Y = 0;
+            vel.X = 0;
+            entity.Set<Velocity>(vel);
+        }
     }
 
     [Query]
