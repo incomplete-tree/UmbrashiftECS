@@ -40,6 +40,7 @@ public class Engine : IDisposable
             new ApplyVelocitySystem(MainWorld),
             new MoveBetweenPointsSystem(MainWorld),
             new DashSystem(MainWorld),
+            new SolidCollisionSystem(MainWorld),
             new ActorCollisionSystem(MainWorld),
             new MovementSystem(MainWorld)
             );

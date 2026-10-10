@@ -86,18 +86,6 @@ public class CrouchSystemTests
         new CrouchState());
 
     private static CrouchConfig CrouchConfigForTests => new(
-        new EntityAction(entity => entity.Set(new OffsetAabbCollider
-        {
-            Width = 20,
-            Height = 26,
-            OffsetX = -12,
-            OffsetY = 10
-        })),
-        new EntityAction(entity => entity.Set(new OffsetAabbCollider
-        {
-            Width = 8,
-            Height = 36
-        })),
         new OffsetAabbCollider { Width = 8, Height = 36 });
 }
 
@@ -176,6 +164,11 @@ public class LayerToggleSystemTests
             LastToggleReleaseHandled = false
         },
         Layer.GameplayLayer0);
+}
+
+internal interface IEntityChangeMultiComponent
+{
+    void Apply(Entity entity);
 }
 
 internal sealed class EntityAction : IEntityChangeMultiComponent

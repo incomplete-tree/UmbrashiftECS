@@ -2,7 +2,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using UmbrashiftECS.Components;
 using UmbrashiftECS.Components.EntityComponents.Basic;
-using UmbrashiftECS.GameLogic;
+using UmbrashiftECS.Operations;
 
 namespace UmbrashiftECS.UnitTests;
 
@@ -13,12 +13,9 @@ public class ComponentChangeTests
     {
         using var world = World.Create();
         var entity = world.Create(new Position(2, 3));
-        var changes = new EntityChangeSingleComponent();
-        changes.Changes.Add(new EntityChangeSingleComponent<Position>(position =>
-            new Position(position.X + 1, position.Y - 1)));
+        var statement = new SetFieldStatement(nameof(Position), nameof(Position.X), new ConstantExpression(3));
+        statement.Execute(entity);
 
-        changes.Apply(entity);
-
-        Assert.Equal(new Position(3, 2), entity.Get<Position>());
+        Assert.Equal(new Position(3, 3), entity.Get<Position>());
     }
 }

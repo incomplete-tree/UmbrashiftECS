@@ -11,6 +11,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\UmbrashiftECS.Components\UmbrashiftECS.Components.csproj" />
+      <ProjectReference Include="..\UmbrashiftECS.Operations\UmbrashiftECS.Operations.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="EntityComponents\Collision\" />

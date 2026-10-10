@@ -1,5 +1,6 @@
 using System;
 using Arch.Core;
+using UmbrashiftECS.Components;
 using UmbrashiftECS.Components.EntityComponents;
 using UmbrashiftECS.Components.EntityComponents.Basic;
 using UmbrashiftECS.Components.EntityComponents.Collision;
@@ -46,8 +47,12 @@ public class DemoEntitySpawner(World world)
         SpawnCrate(new Position(130, 40), Layer.GameplayLayer0);
         SpawnCrate(new Position(280, 40), Layer.GameplayLayer1);
         SpawnCrate(new Position(480, 20));
-        
-        
+
+        // One-way platform (Jump-through from below, solid from above)
+        SpawnOneWayPlatform(340, 265, 110, 14, Direction4.Up);
+
+        // Moving platform (oscillates horizontally across the central gap)
+        SpawnMovingPlatform(190, 204, 72, 14, 1.0f, [new Position(190, 204), new Position(310, 204)]);
     }
 
     public Entity SpawnPlayer()
@@ -119,6 +124,92 @@ public class DemoEntitySpawner(World world)
             new Position(x, y),
             new AabbCollider { Width = width, Height = height },
             new SolidBody(),
+            new ColorRenderer(platformColor));
+    }
+
+    public Entity SpawnOneWayPlatform(
+        int x,
+        int y,
+        int width,
+        int height,
+        Direction4 direction = Direction4.Up,
+        Layer? layer = null,
+        System.Drawing.Color? color = null)
+    {
+        var platformColor = color ?? (layer switch
+        {
+            Layer.GameplayLayer0 => System.Drawing.Color.FromArgb(70, 190, 160),
+            Layer.GameplayLayer1 => System.Drawing.Color.FromArgb(190, 100, 210),
+            _ => System.Drawing.Color.FromArgb(80, 200, 120) // Mint/emerald green for one-way
+        });
+
+        if (layer.HasValue)
+        {
+            return world.Create(
+                new Position(x, y),
+                new AabbCollider { Width = width, Height = height },
+                new SolidBody(),
+                new OneWayCollision(direction),
+                layer.Value,
+                new ColorRenderer(platformColor));
+        }
+
+        return world.Create(
+            new Position(x, y),
+            new AabbCollider { Width = width, Height = height },
+            new SolidBody(),
+            new OneWayCollision(direction),
+            new ColorRenderer(platformColor));
+    }
+
+    public Entity SpawnMovingPlatform(
+        int x,
+        int y,
+        int width,
+        int height,
+        float speed,
+        Position[] waypoints,
+        Layer? layer = null,
+        System.Drawing.Color? color = null)
+    {
+        var startPosition = new Position(x, y);
+        var points = waypoints;
+        if (points.Length == 1)
+        {
+            points = [startPosition, points[0]];
+        }
+        else if (points.Length == 0)
+        {
+            throw new ArgumentException("Moving platform must have at least one target waypoint.", nameof(waypoints));
+        }
+
+        var platformColor = color ?? (layer switch
+        {
+            Layer.GameplayLayer0 => System.Drawing.Color.FromArgb(91, 140, 210),
+            Layer.GameplayLayer1 => System.Drawing.Color.FromArgb(185, 105, 210),
+            _ => System.Drawing.Color.FromArgb(220, 160, 60)
+        });
+
+        if (layer.HasValue)
+        {
+            return world.Create(
+                startPosition,
+                new AabbCollider { Width = width, Height = height },
+                new SolidBody(),
+                new MovementDelta(),
+                new FractionalPositionRemainder(),
+                new MoveBetweenPoints(speed, points),
+                layer.Value,
+                new ColorRenderer(platformColor));
+        }
+
+        return world.Create(
+            startPosition,
+            new AabbCollider { Width = width, Height = height },
+            new SolidBody(),
+            new MovementDelta(),
+            new FractionalPositionRemainder(),
+            new MoveBetweenPoints(speed, points),
             new ColorRenderer(platformColor));
     }
 

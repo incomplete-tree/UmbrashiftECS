@@ -1,0 +1,2 @@
+namespace UmbrashiftECS.Components.EntityComponents;
+
