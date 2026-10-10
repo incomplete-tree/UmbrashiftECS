@@ -1,0 +1,9 @@
+**/.git
+**/.github
+**/.vs
+**/.idea
+**/.roslyn-index
+**/.agents
+**/.codex
+**/bin/
+**/obj/

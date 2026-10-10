@@ -11,5 +11,42 @@
 
 <iframe src="game.html" style="width:640px; height:360px; align-self:center;"></iframe>
 
+<form id="feedbackForm" style="align-self:center; margin-top:10px;">
+    <div>
+        <label>Do you like the jump mechanic or should I add drag? (optional)<br>
+            <select id="jumpOrDrag">
+                <option value="">--</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+            </select>
+        </label>
+    </div>
+    <br>
+    <div>
+        <label>Have a suggestion for how I can improve this more? (optional)<br>
+            <textarea id="suggestion" rows="3" cols="50"></textarea>
+        </label>
+    </div>
+    <br>
+    <div>
+        <button type="submit">Save</button>
+        <span id="feedbackStatus"></span>
+    </div>
+</form>
+
+<script>
+document.getElementById('feedbackForm').onsubmit = async (e) => {
+    e.preventDefault();
+    await fetch('feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            jumpOrDrag: document.getElementById('jumpOrDrag').value,
+            suggestion: document.getElementById('suggestion').value
+        })
+    });
+    document.getElementById('feedbackStatus').textContent = 'Saved!';
+};
+</script>
 </body>
 </html>
