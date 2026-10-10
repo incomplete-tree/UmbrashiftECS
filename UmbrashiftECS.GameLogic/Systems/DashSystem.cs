@@ -20,10 +20,13 @@ public partial class DashSystem(World world) : BaseSystem<World, uint>(world)
         if (dashState.TimeRemaining == 0)
         {
             dashState.IsDashing = false;
-            var vel = entity.Get<Velocity>();
-            vel.Y = 0;
-            vel.X = 0;
-            entity.Set<Velocity>(vel);
+            if (entity.Has<Velocity>())
+            {
+                var vel = entity.Get<Velocity>();
+                vel.Y = 0;
+                vel.X = 0;
+                entity.Set<Velocity>(vel);
+            }
         }
     }
 

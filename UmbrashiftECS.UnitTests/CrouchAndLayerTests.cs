@@ -102,7 +102,7 @@ public class LayerToggleSystemTests
         system.Update(2);
 
         Assert.Equal(Layer.GameplayLayer1, player.Get<Layer>());
-        Assert.True(player.Get<InputBuffer>().LastToggleReleaseHandled);
+        Assert.True(player.Get<InputBuffer>().LastTogglePressHandled);
     }
 
     [Fact]
@@ -151,7 +151,7 @@ public class LayerToggleSystemTests
         new LayerToggleSystem(world).Update(1);
 
         Assert.Equal(Layer.GameplayLayer0, player.Get<Layer>());
-        Assert.False(player.Get<InputBuffer>().LastToggleReleaseHandled);
+        Assert.False(player.Get<InputBuffer>().LastTogglePressHandled);
     }
 
     private static Entity CreateLayerPlayer(World world, Position position = default) => world.Create(
@@ -160,8 +160,8 @@ public class LayerToggleSystemTests
         new InputBuffer
         {
             BufferFrames = 5,
-            LastToggleReleasedFrame = 1,
-            LastToggleReleaseHandled = false
+            LastTogglePressedFrame = 1,
+            LastTogglePressHandled = false
         },
         Layer.GameplayLayer0);
 }

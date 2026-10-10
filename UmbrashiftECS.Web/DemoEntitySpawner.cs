@@ -86,7 +86,7 @@ public class DemoEntitySpawner(World world)
             },
             new DashConfig(Distance: 48, Duration: 6, Amount: 1, FramesTillRefill: 10),
             new DashState { AmountRemaining = 1 },
-            new WalkConfig { SpeedInAir = 0.1f, SpeedOnGround = 1 },
+            new WalkConfig { SpeedInAir = 0.1f, SpeedOnGround = 0.3f },
             new FrictionConfig { Friction = 0.9f },
             Layer.GameplayLayer0,
             new ActiveLayerController(),

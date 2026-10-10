@@ -27,7 +27,8 @@ public partial class ActorCollisionSystem(World world) : BaseSystem<World, uint>
         if (collidedY || collidedX)
         {
             var hitWallEvent = new ActorHitWallEvent(entity, collidedX, collidedY);
-            velocity = new Velocity();
+            if (collidedX) velocity.X = 0;
+            if (collidedY) velocity.Y = 0;
             // EventBus.Send(in hitWallEvent);
         }
     }

@@ -94,7 +94,12 @@ public static class EntityStatementsAndExpressionsExtensions
     {
         return ComponentTypes.GetOrAdd(name, static name =>
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var orderedAssemblies = assemblies
+                .Where(a => a.GetName().Name?.StartsWith("Umbrashift") == true)
+                .Concat(assemblies.Where(a => a.GetName().Name?.StartsWith("Umbrashift") != true));
+
+            foreach (var assembly in orderedAssemblies)
             {
                 foreach (var type in assembly.GetTypes())
                 {
@@ -118,6 +123,10 @@ public static class EntityStatementsAndExpressionsExtensions
                     BindingFlags.Instance |
                     BindingFlags.Public |
                     BindingFlags.NonPublic)
+                ?? key.ComponentType.GetField(
+                    $"<{key.FieldName}>k__BackingField",
+                    BindingFlags.Instance |
+                    BindingFlags.NonPublic)
                 ?? throw new InvalidOperationException(
                     $"Component '{key.ComponentType.FullName}' " +
                     $"does not contain field '{key.FieldName}'."));
@@ -133,6 +142,6 @@ public static class EntityStatementsAndExpressionsExtensions
         Type componentType,
         object component)
     {
-        entity.Set(componentType, component);
+        entity.Set(component);
     }
 }

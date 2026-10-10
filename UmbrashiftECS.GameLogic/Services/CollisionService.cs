@@ -70,7 +70,7 @@ public static partial class CollisionService
         return AabbOverlaps(targetLeft1, targetTop1, targetRight1, targetBottom1, left2, top2, right2, bottom2);
     }
 
-    private static bool TryGetBounds(
+    public static bool TryGetBounds(
         in Entity entity,
         out int left,
         out int top,

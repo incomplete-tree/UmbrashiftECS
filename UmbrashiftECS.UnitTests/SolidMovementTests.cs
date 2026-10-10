@@ -1,8 +1,10 @@
 using Arch.Core;
 using Arch.Core.Extensions;
+using UmbrashiftECS.Components;
 using UmbrashiftECS.Components.EntityComponents;
 using UmbrashiftECS.Components.EntityComponents.Basic;
 using UmbrashiftECS.Components.EntityComponents.Collision;
+using UmbrashiftECS.Components.EntityComponents.Walk;
 using UmbrashiftECS.GameLogic;
 using UmbrashiftECS.GameLogic.EntityComponents.Actors;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
@@ -212,5 +214,144 @@ public class SolidMovementTests
         Assert.Equal(new Position(101, 200), platform.Get<Position>());
         // Player walked 2 and platform carried 1 -> moved 3 to 123
         Assert.Equal(new Position(123, 170), player.Get<Position>());
+    }
+
+    [Fact]
+    public void Engine_PlayerWalkingIntoPlatformMovingTowardPlayer_DoesNotGetStuck()
+    {
+        using var engine = new Engine();
+        engine.Initialize();
+
+        // Platform at (130, 200), width 50, height 20, moving left to (120, 200) at 1 px/frame
+        var platform = engine.MainWorld.Create(
+            new Position(130, 200),
+            new AabbCollider { Width = 50, Height = 20 },
+            new SolidBody(),
+            new MovementDelta(),
+            new FractionalPositionRemainder(),
+            new MoveBetweenPoints(1f, new Position(130, 200), new Position(115, 200)));
+
+        // Player at (100, 195), width 20, height 30 (Y: 195..225, overlaps platform Y: 200..220)
+        // Player right edge is 120. Gap is 10 pixels (120 to 130).
+        var player = engine.MainWorld.Create(
+            new Position(100, 195),
+            new AabbCollider { Width = 20, Height = 30 },
+            new ActorBody(),
+            new InputBinding { InputBindingSlot = 0 },
+            new InputState(),
+            new InputBuffer { BufferFrames = 5 },
+            new Velocity(),
+            new MovementDelta(),
+            new FractionalPositionRemainder(),
+            new WalkConfig { SpeedInAir = 1f, SpeedOnGround = 1f },
+            new FrictionConfig { Friction = 0f },
+            new GroundedState { IsGrounded = true });
+
+        // Player walks right towards the platform
+        var walkRightInput = new PlayerInputStateDTO
+        {
+            InputBindingSlot = 0,
+            ArrowsDirection = Direction8.Right
+        };
+
+        // Update for 10 frames - they will meet and collide
+        for (int frame = 0; frame < 10; frame++)
+        {
+            engine.Update(walkRightInput);
+
+            var playerPos = player.Get<Position>();
+            var platPos = platform.Get<Position>();
+            var playerRight = playerPos.X + 20;
+            var platLeft = platPos.X;
+
+            // Player right edge must never penetrate inside the platform!
+            Assert.True(playerRight <= platLeft,
+                $"Frame {frame}: Player right ({playerRight}) penetrated platform left ({platLeft})! Player at {playerPos.X}, Platform at {platPos.X}");
+        }
+
+        // Now player tries to walk LEFT (away from the platform)
+        var walkLeftInput = new PlayerInputStateDTO
+        {
+            InputBindingSlot = 0,
+            ArrowsDirection = Direction8.Left
+        };
+
+        var posBeforeWalkLeft = player.Get<Position>().X;
+        engine.Update(walkLeftInput);
+        var posAfterWalkLeft = player.Get<Position>().X;
+
+        // Player MUST be able to walk away to the left (not stuck!)
+        Assert.True(posAfterWalkLeft < posBeforeWalkLeft,
+            $"Player got stuck! posBefore={posBeforeWalkLeft}, posAfter={posAfterWalkLeft}");
+    }
+
+    [Fact]
+    public void Engine_PlayerWalkingIntoPlatformMovingRightTowardPlayer_DoesNotGetStuck()
+    {
+        using var engine = new Engine();
+        engine.Initialize();
+
+        // Platform at (100, 200), width 50, height 20, moving right to (115, 200) at 1 px/frame
+        // Platform right edge starts at 150.
+        var platform = engine.MainWorld.Create(
+            new Position(100, 200),
+            new AabbCollider { Width = 50, Height = 20 },
+            new SolidBody(),
+            new MovementDelta(),
+            new FractionalPositionRemainder(),
+            new MoveBetweenPoints(1f, new Position(100, 200), new Position(120, 200)));
+
+        // Player at (160, 195), width 20, height 30 (Y: 195..225, overlaps platform Y: 200..220)
+        // Player left edge is 160. Gap is 10 pixels (150 to 160).
+        var player = engine.MainWorld.Create(
+            new Position(160, 195),
+            new AabbCollider { Width = 20, Height = 30 },
+            new ActorBody(),
+            new InputBinding { InputBindingSlot = 0 },
+            new InputState(),
+            new InputBuffer { BufferFrames = 5 },
+            new Velocity(),
+            new MovementDelta(),
+            new FractionalPositionRemainder(),
+            new WalkConfig { SpeedInAir = 1f, SpeedOnGround = 1f },
+            new FrictionConfig { Friction = 0f },
+            new GroundedState { IsGrounded = true });
+
+        // Player walks left towards the platform
+        var walkLeftInput = new PlayerInputStateDTO
+        {
+            InputBindingSlot = 0,
+            ArrowsDirection = Direction8.Left
+        };
+
+        // Update for 10 frames - they will meet and collide
+        for (int frame = 0; frame < 10; frame++)
+        {
+            engine.Update(walkLeftInput);
+
+            var playerPos = player.Get<Position>();
+            var platPos = platform.Get<Position>();
+            var playerLeft = playerPos.X;
+            var platRight = platPos.X + 50;
+
+            // Player left edge must never penetrate inside the platform!
+            Assert.True(playerLeft >= platRight,
+                $"Frame {frame}: Player left ({playerLeft}) penetrated platform right ({platRight})! Player at {playerPos.X}, Platform at {platPos.X}");
+        }
+
+        // Now player tries to walk RIGHT (away from the platform)
+        var walkRightInput = new PlayerInputStateDTO
+        {
+            InputBindingSlot = 0,
+            ArrowsDirection = Direction8.Right
+        };
+
+        var posBeforeWalkRight = player.Get<Position>().X;
+        engine.Update(walkRightInput);
+        var posAfterWalkRight = player.Get<Position>().X;
+
+        // Player MUST be able to walk away to the right (not stuck!)
+        Assert.True(posAfterWalkRight > posBeforeWalkRight,
+            $"Player got stuck! posBefore={posBeforeWalkRight}, posAfter={posAfterWalkRight}");
     }
 }
