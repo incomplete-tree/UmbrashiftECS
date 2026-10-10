@@ -6,7 +6,7 @@ WORKDIR /src
 COPY . .
 
 # Publish Blazor WebAssembly client
-RUN dotnet publish UmbrashiftECS.Web/UmbrashiftECS.Web.csproj -c Release -o /app/client
+RUN dotnet publish UmbrashiftECS.Web/UmbrashiftECS.Web.csproj -c Release -o /app/client /m:1 /p:BuildInParallel=false
 
 # Publish ASP.NET Core server
 RUN dotnet publish UmbrashiftECS.Web/Server/Server.csproj -c Release -o /app/server
