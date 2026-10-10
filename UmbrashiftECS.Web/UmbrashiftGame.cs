@@ -44,7 +44,7 @@ public class UmbrashiftGame : Game
         _inputCapturer = new InputCapturer();
 
         _spawner = new DemoEntitySpawner(_engine.MainWorld);
-        _spawner.SpawnAll(640, 360);
+        _spawner.SpawnAll();
 
         base.Initialize();
     }

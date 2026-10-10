@@ -20,10 +20,10 @@ public class DemoEntitySpawner(World world)
     public static readonly Guid PlayerSpawnPointId = Guid.Parse("5a7d0c73-9f2b-4f45-8bb9-2a7bbd08d2cb");
     public static readonly Position PlayerSpawnPosition = new(96, 120);
 
-    public void SpawnAll(int mapWidth = 640, int mapHeight = 360)
+    public void SpawnAll()
     {
         SpawnBackground();
-        SpawnMapBounds(mapWidth, mapHeight);
+        SpawnMapBounds(640, 640);
         SpawnPlayerSpawnPoint();
         SpawnPlayer();
 
@@ -131,7 +131,7 @@ public class DemoEntitySpawner(World world)
     public Entity SpawnMapBounds(int width, int height)
     {
         return world.Create(
-            new Position(0, 0),
+            new Position(0, -280),
             new AabbCollider { Width = width, Height = height },
             new MapBounds());
     }
