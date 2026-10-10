@@ -157,7 +157,9 @@ public class DemoEntitySpawner(World world)
                 new FractionalPositionRemainder(),
                 new GravityConfig { GravityInPixelsPerFrameSquared = 0.35f },
                 layer.Value,
-                new ColorRenderer(crateColor));
+                new ColorRenderer(crateColor),
+                new MoveBetweenPoints(0.1f, position, new Position(position.X, position.Y-10))
+                );
         }
 
         return world.Create(

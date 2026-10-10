@@ -38,9 +38,11 @@ public class Engine : IDisposable
             new GravitySystem(MainWorld));
         var movementSystems = new Group<uint>("Movement",
             new ApplyVelocitySystem(MainWorld),
+            new MoveBetweenPointsSystem(MainWorld),
             new DashSystem(MainWorld),
             new ActorCollisionSystem(MainWorld),
-            new MovementSystem(MainWorld));
+            new MovementSystem(MainWorld)
+            );
 
         _systems = new Group<uint>("Umbrashift",
             inputSystems,
