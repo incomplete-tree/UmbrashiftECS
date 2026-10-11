@@ -22,7 +22,7 @@ public class InputCapturer
             InputBindingSlot = 0,
             ArrowsDirection = dir,
             IsDashPressed = keyboardState.IsKeyDown(Keys.C),
-            IsJumpPressed = keyboardState.IsKeyDown(Keys.Space),
+            IsJumpPressed = keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.Up),
             IsAttackPressed = keyboardState.IsKeyDown(Keys.X),
             IsTogglePressed = keyboardState.IsKeyDown(Keys.Z),
             IsCrouchedPressed = keyboardState.IsKeyDown(Keys.Down)
