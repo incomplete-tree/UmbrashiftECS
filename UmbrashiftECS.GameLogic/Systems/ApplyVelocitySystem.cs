@@ -11,7 +11,7 @@ public partial class ApplyVelocitySystem(World world) : BaseSystem<World, uint>(
 {
     [Query]
     [None<Dead>]
-    private static void ApplyVelocity(in Entity entity, in Velocity velocity, ref MovementDelta movementDelta)
+    private void ApplyVelocity(in Entity entity, in Velocity velocity, ref MovementDelta movementDelta)
     {
         movementDelta = new MovementDelta()
         {

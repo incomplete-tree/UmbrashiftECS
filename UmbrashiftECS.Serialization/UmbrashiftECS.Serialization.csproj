@@ -10,4 +10,8 @@
       <Folder Include="EntityComponents\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\UmbrashiftECS.Operations\UmbrashiftECS.Operations.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -21,6 +21,7 @@
     <ItemGroup>
       <ProjectReference Include="..\UmbrashiftECS.GameLogic\UmbrashiftECS.GameLogic.csproj" />
       <ProjectReference Include="..\UmbrashiftECS.Operations\UmbrashiftECS.Operations.csproj" />
+      <ProjectReference Include="..\UmbrashiftECS.Rendering\UmbrashiftECS.Rendering.csproj" />
     </ItemGroup>
 
 </Project>
