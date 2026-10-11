@@ -90,6 +90,7 @@ public class DemoEntitySpawner(World world)
             new FrictionConfig { Friction = 0.9f },
             Layer.GameplayLayer0,
             new ActiveLayerController(),
+            new CameraController(),
             new ColorRenderer(System.Drawing.Color.FromArgb(255, 208, 92)));
     }
 

@@ -45,7 +45,7 @@ public class UmbrashiftGame : Game
         _inputCapturer = new InputCapturer();
 
         _spawner = new DemoEntitySpawner(_engine.MainWorld);
-        _spawner.SpawnAll(640, 360);
+        _spawner.SpawnAll();
 
         base.Initialize();
     }
@@ -84,8 +84,8 @@ public class UmbrashiftGame : Game
     {
         GraphicsDevice.Clear(new Color(12, 16, 27));
 
-        var commands = _renderer.Update(_engine.CurrentFrame, _showDebugHitboxes);
-        _spriteBatch.Begin();
+        var (commands, cameraMatrix) = _renderer.Update(_engine.CurrentFrame, _showDebugHitboxes);
+        _spriteBatch.Begin(transformMatrix: cameraMatrix);
         foreach (var command in commands)
         {
             RenderCommandExecutor.ExecuteRenderCommand(GraphicsDevice, _spriteBatch, command);

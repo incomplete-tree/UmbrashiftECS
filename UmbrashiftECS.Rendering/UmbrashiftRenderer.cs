@@ -1,3 +1,4 @@
+using System.Numerics;
 using Arch.Core;
 using Arch.System;
 using UmbrashiftECS.Components.EntityComponents.Basic;
@@ -18,7 +19,7 @@ public class UmbrashiftRenderer(World world)
         );
     }
 
-    public List<RenderCommand> Update(uint currentFrame, bool? showDebugHitboxes = null)
+    public (List<RenderCommand>, Matrix4x4) Update(uint currentFrame, bool? showDebugHitboxes = null)
     {
         if (showDebugHitboxes.HasValue)
         {
@@ -27,6 +28,9 @@ public class UmbrashiftRenderer(World world)
 
         _systems.Update(currentFrame);
 
-        return RenderService.GatherRenderCommands(world, currentFrame, ShowDebugHitboxes);
+        var cmds = RenderService.GatherRenderCommands(world, currentFrame, ShowDebugHitboxes);
+        var cameraMatrix = CameraService.Update(world);
+
+        return (cmds, cameraMatrix);
     }
 }

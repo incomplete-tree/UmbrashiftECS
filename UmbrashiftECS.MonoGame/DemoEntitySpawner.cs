@@ -13,7 +13,6 @@ using UmbrashiftECS.GameLogic.EntityComponents.Dash;
 using UmbrashiftECS.GameLogic.EntityComponents.Jump;
 using UmbrashiftECS.GameLogic.EntityComponents.Movement;
 using UmbrashiftECS.GameLogic.EntityComponents.PlayerInput;
-using UmbrashiftECS.Rendering.EntityComponents;
 
 namespace UmbrashiftECS.MonoGame;
 
@@ -22,10 +21,10 @@ public class DemoEntitySpawner(World world)
     public static readonly Guid PlayerSpawnPointId = Guid.Parse("5a7d0c73-9f2b-4f45-8bb9-2a7bbd08d2cb");
     public static readonly Position PlayerSpawnPosition = new(96, 120);
 
-    public void SpawnAll(int mapWidth = 640, int mapHeight = 360)
+    public void SpawnAll()
     {
         SpawnBackground();
-        SpawnMapBounds(mapWidth, mapHeight);
+        SpawnMapBounds(640, 640);
         SpawnPlayerSpawnPoint();
         SpawnPlayer();
 
@@ -87,10 +86,11 @@ public class DemoEntitySpawner(World world)
             },
             new DashConfig(Distance: 48, Duration: 6, Amount: 1, FramesTillRefill: 10),
             new DashState { AmountRemaining = 1 },
-            new WalkConfig { SpeedInAir = 0.1f, SpeedOnGround = 1 },
+            new WalkConfig { SpeedInAir = 0.1f, SpeedOnGround = 0.3f },
             new FrictionConfig { Friction = 0.9f },
             Layer.GameplayLayer0,
             new ActiveLayerController(),
+            new CameraController(),
             new ColorRenderer(System.Drawing.Color.FromArgb(255, 208, 92)));
     }
 
@@ -213,7 +213,7 @@ public class DemoEntitySpawner(World world)
             new ColorRenderer(platformColor));
     }
 
-    public Entity SpawnBackground(string texturePath = "background")
+    public Entity SpawnBackground(string texturePath = "Content/background.png")
     {
         return world.Create(
             new Position(0, 0),
@@ -223,7 +223,7 @@ public class DemoEntitySpawner(World world)
     public Entity SpawnMapBounds(int width, int height)
     {
         return world.Create(
-            new Position(0, 0),
+            new Position(0, -280),
             new AabbCollider { Width = width, Height = height },
             new MapBounds());
     }

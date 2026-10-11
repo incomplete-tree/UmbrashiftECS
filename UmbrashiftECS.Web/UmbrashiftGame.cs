@@ -83,8 +83,14 @@ public class UmbrashiftGame : Game
     {
         GraphicsDevice.Clear(new Color(12, 16, 27));
 
-        var commands = _renderer.Update(_engine.CurrentFrame, _showDebugHitboxes);
-        _spriteBatch.Begin();
+        var (commands, cameraMatrix) = _renderer.Update(_engine.CurrentFrame, _showDebugHitboxes);
+        var xnaMatrix = new Matrix(
+            cameraMatrix.M11, cameraMatrix.M12, cameraMatrix.M13, cameraMatrix.M14,
+            cameraMatrix.M21, cameraMatrix.M22, cameraMatrix.M23, cameraMatrix.M24,
+            cameraMatrix.M31, cameraMatrix.M32, cameraMatrix.M33, cameraMatrix.M34,
+            cameraMatrix.M41, cameraMatrix.M42, cameraMatrix.M43, cameraMatrix.M44);
+        _spriteBatch.Begin(transformMatrix: xnaMatrix);
+        // _spriteBatch.Begin();
         foreach (var command in commands)
         {
             RenderCommandExecutor.ExecuteRenderCommand(GraphicsDevice, _spriteBatch, command);
