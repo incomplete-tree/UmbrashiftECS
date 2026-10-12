@@ -15,7 +15,7 @@ public static class CameraService
     public const float AspectRatio = 16f / 9f;
     public const float AspectRatioTolerance = 0.01f;
     
-    public const float DefaultSmoothingFactor = 0.1f;
+    public const float SmoothingFactor = 0.1f;
     public const int LookAheadDistance = 32;
     public const float DefaultWidth = 640f;
     public const float DefaultHeight = 360f;
@@ -24,7 +24,7 @@ public static class CameraService
 
     private static float _velX, _velY, _velW, _velH;
 
-    private static int _targetPosX, _targetPosY, _targetWidth, _targetHeight;
+    private static int _targetPosX, _targetPosY, _targetWidth = 640, _targetHeight = 360;
     /// <summary>
     /// Converts a world position vector to screen space.
     /// </summary>
@@ -65,7 +65,19 @@ public static class CameraService
     
     private static void SmoothVelocity()
     {
-        // TODO
+        UpdateVel(ref _posX, _targetPosX, ref _velX);
+        UpdateVel(ref _posY, _targetPosY, ref _velY);
+        UpdateVel(ref _width, _targetWidth, ref _velW);
+        UpdateVel(ref _height, _targetHeight, ref _velH);
+        return;
+        
+        void UpdateVel(ref float current, int target, ref float currentVel)
+        {
+            // a = \omega^2(x_{target} - x) - 2\omega v
+            // put that in any latex renderer if you want to know the formula.
+            currentVel += SmoothingFactor * SmoothingFactor * (target - current) - 2 * SmoothingFactor * currentVel;
+            current += currentVel;
+        }
     }
 
     /// <summary>
@@ -104,9 +116,7 @@ public static class CameraService
 
             // ClampToLevelBox();
             
-            // TODO remove
-            _posX = _targetPosX;
-            _posY = _targetPosY;
+            SmoothVelocity();
         }
 
         return GetTransformation();
