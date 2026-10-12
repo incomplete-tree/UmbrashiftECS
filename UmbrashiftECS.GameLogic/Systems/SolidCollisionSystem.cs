@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
@@ -51,17 +48,6 @@ public partial class SolidCollisionSystem(World world) : BaseSystem<World, uint>
         var targetSolidTop = solidTop + pixelsMoveY;
         var targetSolidBottom = solidBottom + pixelsMoveY;
 
-        
-        // Actors riding on top of this solid BEFORE it moves are carried along
-        var ridingActors = CollisionService.GetCollidingEntities<ActorBody>(entity, 0, -1).ToHashSet();
-        foreach (var ridingActor in ridingActors)
-        {
-            if (!ridingActor.TryGet<MovementDelta>(out var actorDelta)) actorDelta = new MovementDelta();
-            actorDelta.X += movementDelta.X;
-            actorDelta.Y += movementDelta.Y;
-            ridingActor.Set(actorDelta);
-        }
-
         // Resolve pushes
         foreach (var chunk in world.Query(in ActorQuery).GetChunkIterator())
         {
@@ -71,8 +57,6 @@ public partial class SolidCollisionSystem(World world) : BaseSystem<World, uint>
 
                 if (!CollisionService.TryGetBounds(actor, out int actorLeft, out int actorTop, out int actorRight, out int actorBottom))
                     continue;
-
-                bool isRiding = ridingActors.Contains(actor);
 
                 var actorPos = actor.Get<Position>();
                 var actorRemainder = actor.TryGet<FractionalPositionRemainder>(out var rem) ? rem : default;
@@ -136,42 +120,39 @@ public partial class SolidCollisionSystem(World world) : BaseSystem<World, uint>
 
                 // Resolve Y collision / push
                 bool horizontalOverlap = actorTargetLeft < targetSolidRight && actorTargetRight > targetSolidLeft;
-                if (!isRiding)
+                if (pixelsMoveY < 0 && horizontalOverlap)
                 {
-                    if (pixelsMoveY < 0 && horizontalOverlap)
+                    // Solid moving up: pushes actor above if actorTargetBottom > targetSolidTop
+                    if (actorTop < solidTop && actorTargetBottom > targetSolidTop)
                     {
-                        // Solid moving up: pushes actor above if actorTargetBottom > targetSolidTop
-                        if (actorTop < solidTop && actorTargetBottom > targetSolidTop)
-                        {
-                            var newTargetActorBottom = targetSolidTop;
-                            var newTargetActorTop = newTargetActorBottom - (actorBottom - actorTop);
-                            var newTargetActorY = newTargetActorTop - (actorTop - actorPos.Y);
-                            actorDelta.Y = (newTargetActorY - actorPos.Y) - actorRemainder.Y;
+                        var newTargetActorBottom = targetSolidTop;
+                        var newTargetActorTop = newTargetActorBottom - (actorBottom - actorTop);
+                        var newTargetActorY = newTargetActorTop - (actorTop - actorPos.Y);
+                        actorDelta.Y = (newTargetActorY - actorPos.Y) - actorRemainder.Y;
 
-                            if (actor.TryGet<Velocity>(out var actorVel) && actorVel.Y > 0)
-                            {
-                                actorVel.Y = 0;
-                                actor.Set(actorVel);
-                            }
-                            actor.Set(actorDelta);
+                        if (actor.TryGet<Velocity>(out var actorVel) && actorVel.Y > 0)
+                        {
+                            actorVel.Y = 0;
+                            actor.Set(actorVel);
                         }
+                        actor.Set(actorDelta);
                     }
-                    else if (pixelsMoveY > 0 && horizontalOverlap)
+                }
+                else if (pixelsMoveY > 0 && horizontalOverlap)
+                {
+                    // Solid moving down: pushes actor below if actorTargetTop < targetSolidBottom
+                    if (actorBottom > solidBottom && actorTargetTop < targetSolidBottom)
                     {
-                        // Solid moving down: pushes actor below if actorTargetTop < targetSolidBottom
-                        if (actorBottom > solidBottom && actorTargetTop < targetSolidBottom)
-                        {
-                            var newTargetActorTop = targetSolidBottom;
-                            var newTargetActorY = newTargetActorTop - (actorTop - actorPos.Y);
-                            actorDelta.Y = (newTargetActorY - actorPos.Y) - actorRemainder.Y;
+                        var newTargetActorTop = targetSolidBottom;
+                        var newTargetActorY = newTargetActorTop - (actorTop - actorPos.Y);
+                        actorDelta.Y = (newTargetActorY - actorPos.Y) - actorRemainder.Y;
 
-                            if (actor.TryGet<Velocity>(out var actorVel) && actorVel.Y < 0)
-                            {
-                                actorVel.Y = 0;
-                                actor.Set(actorVel);
-                            }
-                            actor.Set(actorDelta);
+                        if (actor.TryGet<Velocity>(out var actorVel) && actorVel.Y < 0)
+                        {
+                            actorVel.Y = 0;
+                            actor.Set(actorVel);
                         }
+                        actor.Set(actorDelta);
                     }
                 }
             }

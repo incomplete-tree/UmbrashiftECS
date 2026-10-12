@@ -69,7 +69,7 @@ public class SolidMovementTests
     }
 
     [Fact]
-    public void SolidMovingHorizontally_CarriesActorRidingOnTop()
+    public void SolidMovingHorizontally_DoesNotCarryActorOnTop()
     {
         using var world = World.Create();
         // Platform at (100, 200), width 50, height 10
@@ -99,8 +99,8 @@ public class SolidMovementTests
 
         // Platform moved by +2 -> (102, 200)
         Assert.Equal(new Position(102, 200), platform.Get<Position>());
-        // Actor moved by +2 -> (112, 170)
-        Assert.Equal(new Position(112, 170), actor.Get<Position>());
+        // The actor is not carried directly by the solid.
+        Assert.Equal(new Position(110, 170), actor.Get<Position>());
     }
 
     [Fact]
@@ -139,19 +139,19 @@ public class SolidMovementTests
     }
 
     [Fact]
-    public void Engine_MovingPlatformCarriesPlayerOverMultipleFrames()
+    public void Engine_MovingPlatformTransfersVelocityThroughFriction()
     {
         using var engine = new Engine();
         engine.Initialize();
 
-        // Moving platform from (100, 200) to (110, 200) with speed 1f
+        // Moving platform from (100, 200) to (200, 200) with speed 1f
         var platform = engine.MainWorld.Create(
             new Position(100, 200),
             new AabbCollider { Width = 50, Height = 10 },
             new SolidBody(),
             new MovementDelta(),
             new FractionalPositionRemainder(),
-            new MoveBetweenPoints(1f, new Position(100, 200), new Position(110, 200)));
+            new MoveBetweenPoints(1f, new Position(100, 200), new Position(200, 200)));
 
         // Player standing on top of platform at (120, 170), height 30 -> bottom is 200
         var player = engine.MainWorld.Create(
@@ -164,17 +164,22 @@ public class SolidMovementTests
             new Velocity(),
             new MovementDelta(),
             new FractionalPositionRemainder(),
+            new FrictionConfig { Friction = 0.5f },
             new GroundedState());
 
-        for (int frame = 0; frame < 5; frame++)
+        engine.Update(new PlayerInputStateDTO { InputBindingSlot = 0 });
+
+        // Friction starts the actor moving, but there is no direct carry.
+        Assert.Equal(new Position(120, 170), player.Get<Position>());
+        Assert.Equal(0.5f, player.Get<Velocity>().X);
+
+        for (int frame = 1; frame < 20; frame++)
         {
             engine.Update(new PlayerInputStateDTO { InputBindingSlot = 0 });
         }
 
-        // Platform moved 5 pixels from 100 to 105
-        Assert.Equal(new Position(105, 200), platform.Get<Position>());
-        // Player carried 5 pixels from 120 to 125
-        Assert.Equal(new Position(125, 170), player.Get<Position>());
+        Assert.Equal(new Position(120, 200), platform.Get<Position>());
+        Assert.InRange(player.Get<Velocity>().X, 0.999f, 1.001f);
     }
 
     [Fact]
@@ -190,6 +195,7 @@ public class SolidMovementTests
             new SolidBody(),
             new MovementDelta(),
             new FractionalPositionRemainder(),
+            new FrictionConfig { Friction = 0.5f },
             new MoveBetweenPoints(1f, new Position(100, 200), new Position(200, 200)));
 
         // Player standing on platform at (120, 170), height 30 -> bottom is 200
@@ -203,6 +209,7 @@ public class SolidMovementTests
             new Velocity(),
             new MovementDelta(),
             new FractionalPositionRemainder(),
+            new FrictionConfig { Friction = 0.5f },
             new GroundedState { IsGrounded = true });
 
         // Player moves right with velocity 2, platform moves right at 1
@@ -212,8 +219,10 @@ public class SolidMovementTests
 
         // Platform moved to 101
         Assert.Equal(new Position(101, 200), platform.Get<Position>());
-        // Player walked 2 and platform carried 1 -> moved 3 to 123
-        Assert.Equal(new Position(123, 170), player.Get<Position>());
+        // Relative velocity is damped by actor friction * platform friction:
+        // 1 + (2 - 1) * 0.5 * 0.5 = 1.25.
+        Assert.Equal(1.25f, player.Get<Velocity>().X);
+        Assert.Equal(new Position(121, 170), player.Get<Position>());
     }
 
     [Fact]

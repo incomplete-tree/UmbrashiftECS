@@ -34,11 +34,11 @@ public class Engine : IDisposable
             new JumpSystem(MainWorld),
             new CrouchSystem(MainWorld),
             new WalkingSystem(MainWorld),
+            new MoveBetweenPointsSystem(MainWorld),
             new FrictionSystem(MainWorld),
             new GravitySystem(MainWorld));
         var movementSystems = new Group<uint>("Movement",
             new ApplyVelocitySystem(MainWorld),
-            new MoveBetweenPointsSystem(MainWorld),
             new DashSystem(MainWorld),
             new SolidCollisionSystem(MainWorld),
             new ActorCollisionSystem(MainWorld),
